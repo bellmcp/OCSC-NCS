@@ -1,0 +1,91 @@
+{
+  "name": "ocsc-ncs",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "author": {
+    "email": "learningspace@ocsc.go.th",
+    "name": "Office of the Civil Service Commission (OCSC)",
+    "url": "https://www.ocsc.go.th/"
+  },
+  "main": "index.js",
+  "homepage": "https://learningportal.ocsc.go.th/ncs",
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@mui-treasury/components": "^1.9.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.0.0",
+    "@types/lodash": "^4.14.173",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-helmet": "^6.1.0",
+    "@types/react-pdf": "^5.0.0",
+    "@types/react-redux": "^7.1.16",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/styled-components": "^5.1.7",
+    "@types/yup": "^0.29.11",
+    "axios": "^0.21.1",
+    "babel-plugin-import": "^1.13.3",
+    "connected-react-router": "^6.8.0",
+    "customize-cra": "^1.0.0",
+    "dayjs": "^1.10.4",
+    "express": "^4.17.1",
+    "iframe-resizer-react": "^1.1.0",
+    "lodash": "^4.17.21",
+    "pure-react-carousel": "^1.27.6",
+    "query-string": "^6.13.8",
+    "react": "^16.13.1",
+    "react-app-rewired": "^2.1.8",
+    "react-dayjs": "^0.3.2",
+    "react-device-detect": "^1.15.0",
+    "react-dom": "^16.13.1",
+    "react-helmet-async": "^1.0.7",
+    "react-hook-form": "5.7.2",
+    "react-iframe": "^1.8.0",
+    "react-pdf": "^5.0.0",
+    "react-player": "^2.6.2",
+    "react-redux": "^7.2.2",
+    "react-redux-loading-bar": "^5.0.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.3",
+    "react-swipeable-views": "^0.13.9",
+    "react-to-print": "^2.12.3",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^5.2.1",
+    "typescript": "~3.7.2",
+    "use-konami": "^1.0.0",
+    "yup": "0.29.3"
+  },
+  "scripts": {
+    "dev": "react-app-rewired start",
+    "start": "react-app-rewired index.js",
+    "build": "CI='' react-app-rewired build",
+    "build:win": "react-app-rewired build",
+    "deploy": "vercel --prod",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "redux-devtools-extension": "^2.13.8"
+  }
+}
