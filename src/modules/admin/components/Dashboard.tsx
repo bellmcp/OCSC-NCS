@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { get } from 'lodash'
@@ -27,12 +28,9 @@ function createData(
   department: any,
   jobTitle: any,
   jobLevel: any,
-  orientationFlag: any,
-  orientationDate: any,
-  eLearningFlag: any,
-  eLearningDate: any,
-  jointTrainingFlag: any,
-  jointTrainingDate: any,
+  orientation: any,
+  eLearning: any,
+  jointTraining: any,
   lastUpdate: any
 ) {
   return {
@@ -47,12 +45,9 @@ function createData(
     department,
     jobTitle,
     jobLevel,
-    orientationFlag,
-    orientationDate,
-    eLearningFlag,
-    eLearningDate,
-    jointTrainingFlag,
-    jointTrainingDate,
+    orientation,
+    eLearning,
+    jointTraining,
     lastUpdate,
   }
 }
@@ -61,12 +56,12 @@ export default function Dashboard() {
   const dispatch = useDispatch()
 
   const loadNewCivilServants = () => {
-    const load_new_civil_servants_action = actions.loadNewCivilServants(1)
+    const load_new_civil_servants_action = actions.loadNewCivilServants(2)
     dispatch(load_new_civil_servants_action)
   }
 
   useEffect(() => {
-    const load_new_civil_servants_action = actions.loadNewCivilServants(1)
+    const load_new_civil_servants_action = actions.loadNewCivilServants(2)
     dispatch(load_new_civil_servants_action)
   }, [dispatch])
 
@@ -91,12 +86,9 @@ export default function Dashboard() {
           item.department,
           item.jobTitle,
           item.jobLevel,
-          item.orientationFlag,
-          item.orientationDate,
-          item.eLearningFlag,
-          item.eLearningDate,
-          item.jointTrainingFlag,
-          item.jointTrainingDate,
+          item.orientation,
+          item.eLearning,
+          item.jointTraining,
           item.lastUpdate
         )
       )

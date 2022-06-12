@@ -1,60 +1,27 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
-import { getCookie, eraseCookie } from 'utils/cookies'
-import parseJwt from 'utils/parseJwt'
-import {
-  fade,
-  makeStyles,
-  Theme,
-  createStyles,
-  createMuiTheme,
-  ThemeProvider,
-} from '@material-ui/core/styles'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { eraseCookie } from 'utils/cookies'
+
+import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import {
   AppBar,
   Toolbar,
   Typography,
   IconButton,
-  InputBase,
-  Badge,
   Avatar,
   Hidden,
   Button,
-  Divider,
   Container,
-  Tooltip,
-  Dialog,
-  Box,
 } from '@material-ui/core'
-import {
-  Menu as MenuIcon,
-  Search as SearchIcon,
-  KeyboardArrowDown as ArrowDownIcon,
-} from '@material-ui/icons'
+import { KeyboardArrowDown as ArrowDownIcon } from '@material-ui/icons'
 import { grey } from '@material-ui/core/colors'
-import { NavMenu, NavItem } from '@mui-treasury/components/menu/navigation'
-import { useLineNavigationMenuStyles } from '@mui-treasury/styles/navigationMenu/line'
 
+import { isLoginAsAdmin, isLoginAsUser } from 'utils/isLogin'
 import * as uiActions from 'modules/ui/actions'
-import * as userActions from 'modules/user/actions'
-import * as supportActions from 'modules/support/actions'
-import useSearchInputState from '../hooks/useSearchInputState'
-import NavDrawer from './NavDrawer'
 import NavDropdownMobile from './NavDropdownMobile'
 import NavDropdownDesktop from './NavDropdownDesktop'
-
-const darkTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: process.env.REACT_APP_PRIMARY_COLOR_HEX,
-    },
-  },
-  typography: {
-    fontFamily: ['Prompt', 'sans-serif'].join(','),
-  },
-})
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -195,7 +162,6 @@ interface NavigationBarProps {
 export default function NavBar(props: NavigationBarProps) {
   const classes = useStyles()
   const history = useHistory()
-  const { pathname } = useLocation()
   const dispatch = useDispatch()
   const PATH = process.env.REACT_APP_BASE_PATH
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -206,160 +172,37 @@ export default function NavBar(props: NavigationBarProps) {
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [mobileSearchDialogOpen, setMobileSearchDialogOpen] = useState(false)
-
-  const token = getCookie('token')
-  const userId = parseJwt(token).unique_name
-
-  useEffect(() => {
-    if (login()) {
-      const actionProfile = userActions.loadUser()
-      dispatch(actionProfile)
-    }
-  }, [dispatch, userId])
-
-  const { items: users } = useSelector((state: any) => state.user)
-  const login = () => {
-    if (token === null) {
-      return false
-    }
-    if (
-      (token !== '' || token !== undefined) &&
-      parseJwt(token).role === 'user'
-    ) {
-      return true
-    }
-    return false
-  }
-
-  const { items: supports } = useSelector((state) => state.support)
-  const mySupportList = supports.filter((support) => {
-    return support.userId === userId
-  })
-
-  useEffect(() => {
-    const login = () => {
-      if (token === null) {
-        return false
-      }
-      if (
-        (token !== '' || token !== undefined) &&
-        parseJwt(token).role === 'user'
-      ) {
-        return true
-      }
-      return false
-    }
-
-    if (login()) {
-      const action = supportActions.loadSupports()
-      dispatch(action)
-    }
-  }, [dispatch, token, pathname])
-
-  const UNREAD_NOTIFICATION_COUNT = mySupportList.filter((support: any) => {
-    return support.replyMessage !== null && support.isAcknowledged === false
-  }).length
-
-  const navigationItem = [
-    {
-      id: 0,
-      title: 'หน้าหลัก',
-      url: `${PATH}`,
-      notification: 0,
-    },
-    { id: 1, title: 'เข้าเรียน', url: `${PATH}/learn`, notification: 0 },
-    {
-      id: 2,
-      title: 'ช่วยเหลือ',
-      url: `${PATH}/support`,
-      notification: UNREAD_NOTIFICATION_COUNT,
-    },
-  ]
-
-  const isUserCurrentlyInLearn = pathname.includes(`${PATH}/learn/courses`)
 
   const linkToHome = () => {
     handleMenuClose()
-    if (!isUserCurrentlyInLearn) {
+    if (isLoginAsAdmin()) {
+      history.push(`${PATH}/admin`)
+    } else {
       history.push(`${PATH}`)
-    } else {
-      dispatch(uiActions.setLearnExitDialog(true))
     }
-  }
-
-  const linkToLogin = () => {
-    handleMenuClose()
-    if (!isUserCurrentlyInLearn) {
-      history.push(`${PATH}/login`)
-    } else {
-      dispatch(uiActions.setLearnExitDialog(true))
-    }
-  }
-
-  const linkToProfile = () => {
-    handleMenuClose()
-    if (!isUserCurrentlyInLearn) {
-      history.push(`${PATH}/me`)
-    } else {
-      dispatch(uiActions.setLearnExitDialog(true))
-    }
-  }
-
-  const linkToPrintCertificate = () => {
-    handleMenuClose()
-    if (!isUserCurrentlyInLearn) {
-      history.push(`${PATH}/me/certificate`)
-    } else {
-      dispatch(uiActions.setLearnExitDialog(true))
-    }
-  }
-
-  const linkToCertificate = () => {
-    handleMenuClose()
-    window.open(`${process.env.REACT_APP_PORTAL_URL}history`, '_blank')
-  }
-
-  const linkToEditProfile = () => {
-    handleMenuClose()
-    window.open(`${process.env.REACT_APP_PORTAL_URL}edit`, '_blank')
   }
 
   const linkToChangePassword = () => {
     handleMenuClose()
-    window.open(`${process.env.REACT_APP_PORTAL_URL}reset`, '_blank')
-  }
-
-  const linkToPortal = () => {
-    handleMenuClose()
-    window.open(`${process.env.REACT_APP_PORTAL_URL}`, '_blank')
-  }
-
-  const toggleSearchBar = () => {
-    setMobileSearchDialogOpen(true)
-  }
-
-  const toggleSearchBarClose = () => {
-    setMobileSearchDialogOpen(false)
+    if (isLoginAsAdmin()) {
+      history.push(`${PATH}/admin/edit/password`)
+    } else {
+      history.push(`${PATH}/edit/password`)
+    }
   }
 
   const logout = () => {
     handleMenuClose()
-    if (!isUserCurrentlyInLearn) {
-      eraseCookie('token')
-      dispatch(uiActions.setFlashMessage('ออกจากระบบเรียบร้อยแล้ว', 'success'))
-      setTimeout(() => {
+    eraseCookie('token')
+    dispatch(uiActions.setFlashMessage('ออกจากระบบเรียบร้อยแล้ว', 'success'))
+    setTimeout(() => {
+      if (isLoginAsAdmin()) {
+        history.push(`${PATH}/admin`)
+      } else {
         history.push(`${PATH}`)
-        window.location.reload()
-      }, 1000)
-    } else {
-      dispatch(uiActions.setLearnExitDialog(true))
-    }
-  }
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen)
+      }
+      window.location.reload()
+    }, 1000)
   }
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -379,33 +222,27 @@ export default function NavBar(props: NavigationBarProps) {
     setMobileMoreAnchorEl(event.currentTarget)
   }
 
-  const [searchValue, setSearchValue] = useSearchInputState(() => {
-    history.push(`${PATH}/search?query=${searchValue}`)
-  })
-
   const menuId = 'primary-search-account-menu'
   const mobileMenuId = 'primary-search-account-menu-mobile'
 
-  const isLearnModule =
-    pathname.includes(`${PATH}/learn/courses`) ||
-    pathname.includes(`${PATH}/democontent`)
+  const getUsernameLabel = () => {
+    if (isLoginAsAdmin()) return 'ผู้ดูแลระบบ'
+    else if (isLoginAsUser()) return 'ชื่อกรม'
+    else return 'เข้าสู่ระบบ'
+  }
+
+  const checkIsLoggedIn = () => {
+    return isLoginAsAdmin() || isLoginAsUser()
+  }
+
+  const isLoggedIn = checkIsLoggedIn()
+  const usernameLabel = getUsernameLabel()
 
   return (
     <div className={classes.grow}>
       <AppBar position='fixed' className={classes.appBar} elevation={0}>
-        <Container maxWidth={!isLearnModule ? 'lg' : false}>
+        <Container maxWidth='lg'>
           <Toolbar>
-            {/* DRAWER TOGGLE */}
-            <Hidden smUp implementation='css'>
-              <IconButton
-                edge='start'
-                color='primary'
-                className={classes.menuButton}
-                onClick={handleDrawerToggle}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Hidden>
             {/* SITE LOGO */}
             <img
               src={LogoImage}
@@ -427,43 +264,39 @@ export default function NavBar(props: NavigationBarProps) {
             <div className={classes.grow} />
             {/* DESKTOP DROPDOWN */}
             <div className={classes.sectionDesktop}>
-              <Tooltip title={login() ? 'ดูโปรไฟล์' : ''}>
-                <Button
-                  color='primary'
-                  onClick={login() ? linkToProfile : linkToLogin}
-                  size='small'
-                  style={{
-                    borderRadius: 50,
-                    padding: '10px 10px',
-                    margin: '6px 0',
-                  }}
-                  startIcon={
-                    <Avatar
-                      className={login() ? classes.loggedIn : classes.small}
-                    />
-                  }
-                >
-                  <Typography
-                    color='textPrimary'
-                    className={classes.bold}
-                    noWrap
-                  >
-                    {login() ? users.firstname : 'เข้าสู่ระบบ'}
-                  </Typography>
-                </Button>
-              </Tooltip>
-              <IconButton
+              <Button
                 color='primary'
-                edge='end'
-                aria-label='Toggle user dropdown menu'
-                aria-controls={menuId}
-                onClick={handleProfileMenuOpen}
+                disabled
+                size='small'
                 style={{
+                  borderRadius: 50,
+                  padding: '10px 10px',
                   margin: '6px 0',
                 }}
+                startIcon={
+                  <Avatar
+                    className={isLoggedIn ? classes.loggedIn : classes.small}
+                  />
+                }
               >
-                <ArrowDownIcon />
-              </IconButton>
+                <Typography color='textPrimary' className={classes.bold} noWrap>
+                  {usernameLabel}
+                </Typography>
+              </Button>
+              {isLoggedIn && (
+                <IconButton
+                  color='primary'
+                  edge='end'
+                  aria-label='Toggle user dropdown menu'
+                  aria-controls={menuId}
+                  onClick={handleProfileMenuOpen}
+                  style={{
+                    margin: '6px 0',
+                  }}
+                >
+                  <ArrowDownIcon />
+                </IconButton>
+              )}
             </div>
             {/* MOBILE DROPDOWN */}
             <Hidden only={['xs', 'lg', 'md', 'xl']}>
@@ -476,79 +309,34 @@ export default function NavBar(props: NavigationBarProps) {
                 color='inherit'
               >
                 <Avatar
-                  className={login() ? classes.loggedIn : classes.small}
+                  className={isLoggedIn ? classes.loggedIn : classes.small}
                 />
               </IconButton>
             </div>
           </Toolbar>
         </Container>
       </AppBar>
-
       <NavDropdownMobile
-        login={login}
+        isLoggedIn={isLoggedIn}
         logout={logout}
-        users={users}
         mobileMenuId={mobileMenuId}
         mobileMoreAnchorEl={mobileMoreAnchorEl}
         isMobileMenuOpen={isMobileMenuOpen}
         handleMobileMenuClose={handleMobileMenuClose}
-        linkToLogin={linkToLogin}
-        linkToPortal={linkToPortal}
-        linkToProfile={linkToProfile}
-        linkToPrintCertificate={linkToPrintCertificate}
-        linkToCertificate={linkToCertificate}
-        linkToEditProfile={linkToEditProfile}
+        linkToHome={linkToHome}
         linkToChangePassword={linkToChangePassword}
+        usernameLabel={usernameLabel}
       />
       <NavDropdownDesktop
-        login={login}
+        isLoggedIn={isLoggedIn}
         logout={logout}
-        users={users}
-        linkToPortal={linkToPortal}
-        linkToProfile={linkToProfile}
-        linkToPrintCertificate={linkToPrintCertificate}
-        linkToCertificate={linkToCertificate}
-        linkToEditProfile={linkToEditProfile}
+        linkToHome={linkToHome}
         linkToChangePassword={linkToChangePassword}
         anchorEl={anchorEl}
         menuId={menuId}
         isMenuOpen={isMenuOpen}
         handleMenuClose={handleMenuClose}
       />
-      <NavDrawer
-        mobileOpen={mobileOpen}
-        handleDrawerToggle={handleDrawerToggle}
-        active={props.active}
-        unreadNotificationCount={UNREAD_NOTIFICATION_COUNT}
-        isUserCurrentlyInLearn={isUserCurrentlyInLearn}
-      />
-      <Dialog
-        open={mobileSearchDialogOpen}
-        onClose={toggleSearchBarClose}
-        classes={{
-          scrollPaper: classes.topScrollPaper,
-          paperScrollBody: classes.topPaperScrollBody,
-        }}
-      >
-        <Box m={2}>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              autoFocus
-              defaultValue={searchValue}
-              placeholder='ค้นหา'
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-              onChange={(e) => setSearchValue(e?.target?.value ?? null)}
-            />
-          </div>
-        </Box>
-      </Dialog>
     </div>
   )
 }

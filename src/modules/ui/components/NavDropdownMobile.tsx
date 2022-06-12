@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React from 'react'
 import {
   MenuItem,
   Menu,
@@ -8,35 +8,26 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+} from '@material-ui/core'
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import {
   MeetingRoom as LogoutIcon,
-  ExitToApp as PortalIcon,
-  Print as PrintIcon,
   ChromeReaderMode as FolderIcon,
-  Edit as EditIcon,
   Lock as LockIcon,
-} from '@material-ui/icons';
-import { grey } from '@material-ui/core/colors';
-
-import { UserProps } from 'modules/user/types';
+} from '@material-ui/icons'
+import { grey } from '@material-ui/core/colors'
 
 interface NavDropdownMobileProps {
-  users: UserProps;
-  login: () => void;
-  logout: () => void;
-  mobileMenuId: number;
-  mobileMoreAnchorEl: any;
-  isMobileMenuOpen: boolean;
-  handleMobileMenuClose: () => void;
-  linkToLogin: () => void;
-  linkToProfile: () => void;
-  linkToPortal: () => void;
-  linkToPrintCertificate: () => void;
-  linkToCertificate: () => void;
-  linkToEditProfile: () => void;
-  linkToChangePassword: () => void;
+  isLoggedIn: boolean
+  logout: () => void
+  mobileMenuId: number
+  mobileMoreAnchorEl: any
+  isMobileMenuOpen: boolean
+  handleMobileMenuClose: () => void
+  linkToLogin: () => void
+  linkToHome: () => void
+  linkToChangePassword: () => void
+  usernameLabel: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,25 +47,20 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 600,
     },
   })
-);
+)
 
 export default function NavDropdownMobile({
-  users,
-  login,
+  isLoggedIn,
   logout,
   mobileMenuId,
   mobileMoreAnchorEl,
   isMobileMenuOpen,
   handleMobileMenuClose,
-  linkToLogin,
-  linkToProfile,
-  linkToPortal,
-  linkToPrintCertificate,
-  linkToCertificate,
-  linkToEditProfile,
+  linkToHome,
   linkToChangePassword,
+  usernameLabel,
 }: NavDropdownMobileProps) {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Menu
@@ -86,74 +72,46 @@ export default function NavDropdownMobile({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem onClick={login() ? linkToProfile : linkToLogin}>
-        <ListItemIcon color="inherit">
-          <Avatar className={login() ? classes.loggedIn : classes.small} />
+      <MenuItem>
+        <ListItemIcon color='inherit'>
+          <Avatar className={isLoggedIn ? classes.loggedIn : classes.small} />
         </ListItemIcon>
         <ListItemText
           className={classes.bold}
           primary={
-            login() ? (
-              <Typography style={{ fontWeight: 600 }}>
-                {users.firstname} {users.lastname}
-              </Typography>
-            ) : (
-              <Typography style={{ fontWeight: 600 }}>เข้าสู่ระบบ</Typography>
-            )
+            <Typography style={{ fontWeight: 600 }}>
+              {isLoggedIn ? usernameLabel : 'เข้าสู่ระบบ'}
+            </Typography>
           }
-          secondary={login() && 'ดูโปรไฟล์ >'}
         />
       </MenuItem>
-      {login() && <Divider />}
-      <MenuItem onClick={linkToPortal}>
-        <ListItemIcon color="inherit">
-          <PortalIcon style={{ margin: 8, marginLeft: 4 }} />
-        </ListItemIcon>
-        <ListItemText primary="ไปยัง Learning Portal"></ListItemText>
-      </MenuItem>
-      {login() && (
-        <MenuItem onClick={linkToPrintCertificate}>
-          <ListItemIcon color="inherit">
-            <PrintIcon style={{ margin: 8, marginLeft: 4 }} />
-          </ListItemIcon>
-          <ListItemText primary="พิมพ์ประกาศนียบัตร ก.พ."></ListItemText>
-        </MenuItem>
-      )}
-      {login() && (
-        <MenuItem onClick={linkToCertificate}>
-          <ListItemIcon color="inherit">
+      {isLoggedIn && (
+        <MenuItem onClick={linkToHome}>
+          <ListItemIcon color='inherit'>
             <FolderIcon style={{ margin: 8, marginLeft: 4 }} />
           </ListItemIcon>
-          <ListItemText primary="ประวัติการเรียน"></ListItemText>
+          <ListItemText primary='รายงานผลการพัฒนาฯ'></ListItemText>
         </MenuItem>
       )}
-      {login() && (
-        <MenuItem onClick={linkToEditProfile}>
-          <ListItemIcon color="inherit">
-            <EditIcon style={{ margin: 8, marginLeft: 4 }} />
-          </ListItemIcon>
-          <ListItemText primary="แก้ไขข้อมูลส่วนบุคคล"></ListItemText>
-        </MenuItem>
-      )}
-      {login() && (
+      {isLoggedIn && (
         <MenuItem onClick={linkToChangePassword}>
-          <ListItemIcon color="inherit">
+          <ListItemIcon color='inherit'>
             <LockIcon style={{ margin: 8, marginLeft: 4 }} />
           </ListItemIcon>
-          <ListItemText primary="เปลี่ยนรหัสผ่าน"></ListItemText>
+          <ListItemText primary='เปลี่ยนรหัสผ่าน'></ListItemText>
         </MenuItem>
       )}
-      {login() && (
+      {isLoggedIn && (
         <>
           <Divider />
           <MenuItem onClick={logout}>
-            <ListItemIcon color="inherit">
+            <ListItemIcon color='inherit'>
               <LogoutIcon style={{ margin: 8, marginLeft: 4 }} />
             </ListItemIcon>
-            <ListItemText primary="ออกจากระบบ"></ListItemText>
+            <ListItemText primary='ออกจากระบบ'></ListItemText>
           </MenuItem>
         </>
       )}
     </Menu>
-  );
+  )
 }

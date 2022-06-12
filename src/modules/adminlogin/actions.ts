@@ -30,7 +30,7 @@ function loadLogin(userInfo: any) {
         },
       })
       setCookie('token', result.data.token, 3)
-      dispatch(push(`${PATH}`))
+      dispatch(push(`${PATH}/admin`))
       dispatch(uiActions.setFlashMessage('เข้าสู่ระบบเรียบร้อยแล้ว', 'success'))
     } catch (err) {
       if (err?.response?.status === 401) {

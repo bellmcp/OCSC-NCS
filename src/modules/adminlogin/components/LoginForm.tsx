@@ -94,7 +94,7 @@ export default function LoginForm() {
   })
 
   const onLogin = (loginInfo: object) => {
-    const info = { ...loginInfo, role: 'user' }
+    const info = { ...loginInfo, role: 'admin' }
     const actionLogin = actions.loadLogin(info)
     dispatch(actionLogin)
   }

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import axios from 'axios'
 import { push } from 'connected-react-router'
 import { setCookie } from 'utils/cookies'

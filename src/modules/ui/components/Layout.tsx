@@ -29,6 +29,7 @@ import Alert from '@material-ui/lab/Alert'
 
 import * as actions from '../actions'
 import NavBar from './NavBar'
+import Footer from './Footer'
 import Routes from './Routes'
 
 import { isLogin } from 'utils/isLogin'
@@ -181,6 +182,7 @@ export default function Layout() {
       />
       <NavBar active={activePage} setActivePage={setActivePage} />
       <Routes />
+      <Footer />
       {/* ANNOUNCEMENT DIALOG */}
       <Dialog
         open={announcementDialogOpen}

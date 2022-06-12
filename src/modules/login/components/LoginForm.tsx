@@ -149,8 +149,7 @@ export default function LoginForm() {
         <Typography
           component='h1'
           variant='h4'
-          style={{ fontWeight: 600 }}
-          gutterBottom
+          style={{ fontWeight: 600, marginBottom: 48 }}
         >
           เข้าสู่ระบบ
         </Typography>
