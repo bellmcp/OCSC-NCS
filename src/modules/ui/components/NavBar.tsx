@@ -427,7 +427,6 @@ export default function NavBar(props: NavigationBarProps) {
             <div className={classes.grow} />
             {/* DESKTOP DROPDOWN */}
             <div className={classes.sectionDesktop}>
-              <Divider orientation='vertical' className={classes.divider} />
               <Tooltip title={login() ? 'ดูโปรไฟล์' : ''}>
                 <Button
                   color='primary'
@@ -471,9 +470,6 @@ export default function NavBar(props: NavigationBarProps) {
               <div className={classes.grow} />
             </Hidden>
             <div className={classes.sectionMobile}>
-              <IconButton onClick={toggleSearchBar} color='primary'>
-                <SearchIcon />
-              </IconButton>
               <IconButton
                 aria-controls={mobileMenuId}
                 onClick={handleMobileMenuOpen}

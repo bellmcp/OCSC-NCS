@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import {
   TextField,
@@ -26,6 +26,9 @@ import {
   ArrowForwardIos as ArrowForwardIcon,
 } from '@material-ui/icons'
 import * as actions from '../actions'
+import * as ministryActions from 'modules/ministry/actions'
+import * as departmentActions from 'modules/department/actions'
+import { isEmpty } from 'lodash'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -51,6 +54,16 @@ const useStyles = makeStyles((theme) => ({
 interface State {
   password: string
   showPassword: boolean
+}
+
+interface MinistryType {
+  id: number
+  name: string
+}
+
+interface DepartmentType {
+  id: number
+  name: string
 }
 
 export default function LoginForm() {
@@ -87,32 +100,47 @@ export default function LoginForm() {
   const { register, handleSubmit, errors } = useForm({
     mode: 'onSubmit',
     validationSchema: yup.object().shape({
-      userId: yup
-        .string()
-        .required('กรุณากรอกเลขประจำตัวประจำตัวประชาชน')
-        .matches(/^[0-9]{13}$/, 'กรุณากรอกเป็นตัวเลข 13 หลักเท่านั้น'),
       password: yup.string().required(),
     }),
   })
 
-  const onLogin = (loginInfo: object) => {
-    const info = { ...loginInfo, role: 'user' }
-    const actionLogin = actions.loadLogin(info)
+  const onLogin = (loginInfo: any) => {
+    const actionLogin = actions.loadLogin({
+      department,
+      password: loginInfo.password,
+    })
     dispatch(actionLogin)
   }
 
   const { messageLogin } = useSelector((state: any) => state.login)
 
-  const [ministry, setMinistry] = useState<string>('')
-  const [department, setDepartment] = useState<string>('')
+  const [ministry, setMinistry] = useState(null)
+  const [department, setDepartment] = useState(null)
 
   const handleChangeMinistry = (event: any) => {
-    setMinistry(event.target.value)
+    const value = event.target.value
+    setMinistry(value)
+    const load_department_action = departmentActions.loadDepartment(value)
+    dispatch(load_department_action)
   }
 
   const handleChangeDepartment = (event: any) => {
     setDepartment(event.target.value)
   }
+
+  useEffect(() => {
+    const load_ministry_action = ministryActions.loadMinistry()
+    dispatch(load_ministry_action)
+  }, [dispatch])
+
+  const { items: ministries } = useSelector((state: any) => state.ministry)
+  const { items: departments } = useSelector((state: any) => state.department)
+
+  const [departmentList, setDepartmentList] = useState([])
+
+  useEffect(() => {
+    setDepartmentList(departments)
+  }, [departments])
 
   return (
     <Paper className={classes.paper} elevation={0}>
@@ -133,51 +161,63 @@ export default function LoginForm() {
         color='textSecondary'
       ></Typography>
       <form className={classes.form} noValidate>
-        <FormControl fullWidth variant='outlined'>
+        <FormControl fullWidth variant='outlined' style={{ marginBottom: 16 }}>
           <InputLabel>กระทรวง</InputLabel>
           <Select
+            inputRef={register}
+            name='ministry'
             value={ministry}
             label='กระทรวง'
             variant='outlined'
             onChange={handleChangeMinistry}
+            placeholder='โปรดเลือกกระทรวง'
+            MenuProps={{
+              anchorOrigin: {
+                vertical: 'bottom',
+                horizontal: 'left',
+              },
+              style: {
+                maxHeight: 380,
+              },
+              getContentAnchorEl: null,
+            }}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {ministries.map((ministry: MinistryType) => (
+              <MenuItem dense key={ministry.id} value={ministry.id}>
+                {ministry.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl fullWidth variant='outlined'>
           <InputLabel>กรม</InputLabel>
           <Select
+            inputRef={register}
+            name='department'
             value={department}
             label='กรม'
             variant='outlined'
             onChange={handleChangeDepartment}
+            placeholder='โปรดเลือกกรม'
+            disabled={isEmpty(departmentList)}
+            MenuProps={{
+              anchorOrigin: {
+                vertical: 'bottom',
+                horizontal: 'left',
+              },
+              style: {
+                maxHeight: 380,
+              },
+              getContentAnchorEl: null,
+            }}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {departmentList.map((department: DepartmentType) => (
+              <MenuItem dense key={department.id} value={department.id}>
+                {department.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
-        <TextField
-          variant='outlined'
-          margin='normal'
-          required
-          fullWidth
-          inputRef={register}
-          label='เลขประจำตัวประชาชน'
-          name='userId'
-          helperText={errors.userId ? 'กรุณากรอกเลขประจำตัวประชาชน' : null}
-          error={!!errors.userId}
-          style={{ letterSpacing: ' 0.25em' }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <PersonIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
         <TextField
           variant='outlined'
           margin='normal'
@@ -199,7 +239,6 @@ export default function LoginForm() {
             endAdornment: (
               <InputAdornment position='end'>
                 <IconButton
-                  aria-label='toggle password visibility'
                   onClick={handleClickShowPassword}
                   onMouseDown={handleMouseDownPassword}
                 >
