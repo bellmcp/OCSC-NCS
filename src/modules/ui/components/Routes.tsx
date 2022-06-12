@@ -5,7 +5,6 @@ import PrivateAdminRoute from 'modules/routes/PrivateAdminRoute'
 import NotFound from './NotFound'
 
 import UserRoutes from 'modules/user/components/Routes'
-import AdminRoutes from 'modules/admin/components/Routes'
 import Login from 'modules/login/components/Login'
 import AdminLogin from 'modules/adminlogin/components/Login'
 
@@ -20,7 +19,7 @@ export default function Routes() {
       <Route exact path={`${PATH}/login`}>
         <Login />
       </Route>
-      <PrivateAdminRoute exact component={AdminRoutes} path={`${PATH}/admin`} />
+      <PrivateAdminRoute exact component={UserRoutes} path={`${PATH}/admin`} />
       <PrivateRoute exact component={UserRoutes} path={PATH} />
       <Route>
         <NotFound />

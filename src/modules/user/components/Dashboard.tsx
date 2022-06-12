@@ -14,6 +14,7 @@ import { Replay as ReplayIcon } from '@material-ui/icons'
 
 import TestTable from './TestTable'
 import * as actions from '../actions'
+import { isLoginAsAdmin, isLoginAsUser } from 'utils/isLogin'
 
 function createData(
   order: any,
@@ -103,20 +104,11 @@ export default function Dashboard() {
     )
   }, [newCivilServants])
 
-  const getRowData = (data: any, name: string) => {
-    const result = get(data, name)
-    if (!result || result === null) {
-      return <span style={{ color: 'grey' }}>—</span>
-    } else return result
-  }
-
-  return (
-    <>
-      <Toolbar />
-      <Container maxWidth='lg' style={{ marginTop: 36, marginBottom: 36 }}>
-        <Typography variant='h5' component='h1' style={{ fontWeight: 600 }}>
-          ค้นหาข้าราชการใหม่ (บรรจุไม่เกิน 1 ปี)
-        </Typography>
+  const renderSearchSection = () => {
+    if (isLoginAsAdmin()) {
+      return <>ADMIN SEARCH</>
+    } else if (isLoginAsUser()) {
+      return (
         <Grid container style={{ margin: '12px 0' }} spacing={2}>
           <Grid item xs={3} style={{ paddingLeft: 0 }}>
             <TextField
@@ -140,6 +132,20 @@ export default function Dashboard() {
             </Button>
           </Grid>
         </Grid>
+      )
+    } else {
+      return <>ERROR</>
+    }
+  }
+
+  return (
+    <>
+      <Toolbar />
+      <Container maxWidth='lg' style={{ marginTop: 36, marginBottom: 36 }}>
+        <Typography variant='h5' component='h1' style={{ fontWeight: 600 }}>
+          ค้นหาข้าราชการใหม่ (บรรจุไม่เกิน 1 ปี)
+        </Typography>
+        {renderSearchSection()}
         <Grid container justify='space-between' style={{ margin: '24px 0' }}>
           <Typography variant='h6' component='h1' style={{ fontWeight: 600 }}>
             ผลการค้นหา ({tableData.length} รายการ)

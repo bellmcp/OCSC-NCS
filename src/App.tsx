@@ -8,7 +8,7 @@ import ScrollToTop from 'utils/ScrollToTop'
 import Layout from 'modules/ui/components/Layout'
 import META_IMAGE from './meta.jpg'
 
-const TITLE = 'OCSC Learning Space'
+const TITLE = 'รายงานผลการพัฒนาในช่วงการทดลองปฏิบัติหน้าที่ราชการ'
 const URL = process.env.REACT_APP_PLATFORM_URL
 const DESCRIPTION =
   'โลกแห่งการเรียนรู้ ไม่มีวันจบสิ้น ยิ่งเรียนยิ่งรู้ ยิ่งเพิ่มพลังทางปัญญา'

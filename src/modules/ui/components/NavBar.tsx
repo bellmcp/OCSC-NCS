@@ -154,12 +154,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-interface NavigationBarProps {
-  active: number
-  setActivePage: (id: number) => void
-}
-
-export default function NavBar(props: NavigationBarProps) {
+export default function NavBar(props) {
   const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
