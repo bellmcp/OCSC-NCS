@@ -9,6 +9,45 @@ const LOAD_DEPARTMENT_SUCCESS =
 const LOAD_DEPARTMENT_FAILURE =
   'learning-platform/department/LOAD_DEPARTMENT_FAILURE'
 
+const LOAD_ALL_DEPARTMENT_REQUEST =
+  'learning-platform/department/LOAD_ALL_DEPARTMENT_REQUEST'
+const LOAD_ALL_DEPARTMENT_SUCCESS =
+  'learning-platform/department/LOAD_ALL_DEPARTMENT_SUCCESS'
+const LOAD_ALL_DEPARTMENT_FAILURE =
+  'learning-platform/department/LOAD_ALL_DEPARTMENT_FAILURE'
+
+function loadAllDepartment() {
+  return async (dispatch: any) => {
+    dispatch({ type: LOAD_DEPARTMENT_REQUEST })
+    try {
+      var { data } = await axios.get('/departments', {
+        baseURL: process.env.REACT_APP_PORTAL_API_URL,
+      })
+      if (data.length === 0) {
+        data = []
+      }
+      dispatch({
+        type: LOAD_DEPARTMENT_SUCCESS,
+        payload: {
+          department: data,
+        },
+      })
+    } catch (err) {
+      dispatch({ type: LOAD_DEPARTMENT_FAILURE })
+      dispatch(
+        uiActions.setFlashMessage(
+          `โหลดข้อมูลกรมทั้งหมดไม่สำเร็จ เกิดข้อผิดพลาด ${get(
+            err,
+            'response.status',
+            'บางอย่าง'
+          )}`,
+          'error'
+        )
+      )
+    }
+  }
+}
+
 function loadDepartment(ministryId: string) {
   return async (dispatch: any) => {
     dispatch({ type: LOAD_DEPARTMENT_REQUEST })
@@ -45,5 +84,9 @@ export {
   LOAD_DEPARTMENT_REQUEST,
   LOAD_DEPARTMENT_SUCCESS,
   LOAD_DEPARTMENT_FAILURE,
+  LOAD_ALL_DEPARTMENT_REQUEST,
+  LOAD_ALL_DEPARTMENT_SUCCESS,
+  LOAD_ALL_DEPARTMENT_FAILURE,
   loadDepartment,
+  loadAllDepartment,
 }

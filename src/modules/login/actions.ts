@@ -17,7 +17,7 @@ function clearMessageLogin() {
   }
 }
 
-function loadLogin(userInfo: any) {
+function loadLogin(userInfo: any, ministry: string, department: string) {
   return async (dispatch: any) => {
     dispatch({ type: LOAD_LOGIN_REQUEST })
     try {
@@ -40,7 +40,7 @@ function loadLogin(userInfo: any) {
         },
       })
       setCookie('token', result.data.token, 3)
-      dispatch(push(`${PATH}`))
+      dispatch(push(`${PATH}?ministry=${ministry}&department=${department}`))
       dispatch(uiActions.setFlashMessage('เข้าสู่ระบบเรียบร้อยแล้ว', 'success'))
     } catch (err) {
       if (err?.response?.status === 401) {

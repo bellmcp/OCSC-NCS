@@ -15,7 +15,7 @@ const LOAD_USER_REQUEST = 'learning-platform/user/LOAD_USER_REQUEST'
 const LOAD_USER_SUCCESS = 'learning-platform/user/LOAD_USER_SUCCESS'
 const LOAD_USER_FAILURE = 'learning-platform/user/LOAD_USER_FAILURE'
 
-function loadNewCivilServants(departmentId: number) {
+function loadNewCivilServants(departmentId: string) {
   return async (dispatch: any) => {
     const token = getCookie('token')
     const userId = parseJwt(token).unique_name

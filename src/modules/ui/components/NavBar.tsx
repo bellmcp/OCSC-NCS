@@ -1,8 +1,10 @@
 // @ts-nocheck
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory, useLocation } from 'react-router-dom'
 import { eraseCookie } from 'utils/cookies'
+import queryString from 'query-string'
+import { get } from 'lodash'
 
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import {
@@ -158,15 +160,25 @@ export default function NavBar(props) {
   const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
+  const { search } = useLocation()
+  const { department: departmentId } = queryString.parse(search)
+
   const PATH = process.env.REACT_APP_BASE_PATH
+  const LogoImage = require('assets/images/logo.svg')
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null)
+  const [departmentList, setDepartmentList] = useState([])
 
-  const LogoImage = require('assets/images/logo.svg')
+  const { items: departments } = useSelector((state: any) => state.department)
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+
+  useEffect(() => {
+    setDepartmentList(departments)
+  }, [departments])
 
   const linkToHome = () => {
     handleMenuClose()
@@ -190,14 +202,16 @@ export default function NavBar(props) {
     handleMenuClose()
     eraseCookie('token')
     dispatch(uiActions.setFlashMessage('ออกจากระบบเรียบร้อยแล้ว', 'success'))
-    setTimeout(() => {
-      if (isLoginAsAdmin()) {
-        history.push(`${PATH}/admin`)
-      } else {
-        history.push(`${PATH}`)
-      }
-      window.location.reload()
-    }, 1000)
+    if (isLoginAsAdmin()) {
+      setTimeout(() => {
+        history.push(`${PATH}/admin/login`)
+      }, 1000)
+    } else if (isLoginAsUser()) {
+      setTimeout(() => {
+        history.push(`${PATH}/login`)
+      }, 1000)
+    }
+    window.location.reload()
   }
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -220,9 +234,16 @@ export default function NavBar(props) {
   const menuId = 'primary-search-account-menu'
   const mobileMenuId = 'primary-search-account-menu-mobile'
 
+  const getDepartmentLabel = () => {
+    const result = departmentList.find(
+      (department: any) => String(department.id) === departmentId
+    )
+    return get(result, 'name', '')
+  }
+
   const getUsernameLabel = () => {
     if (isLoginAsAdmin()) return 'ผู้ดูแลระบบ'
-    else if (isLoginAsUser()) return 'ชื่อกรม'
+    else if (isLoginAsUser()) return getDepartmentLabel()
     else return 'เข้าสู่ระบบ'
   }
 

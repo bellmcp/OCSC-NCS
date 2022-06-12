@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import {
   TextField,
@@ -19,11 +19,9 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Person as PersonIcon,
   Lock as LockIcon,
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
-  ArrowForwardIos as ArrowForwardIcon,
 } from '@material-ui/icons'
 import * as actions from '../actions'
 import * as ministryActions from 'modules/ministry/actions'
@@ -69,10 +67,18 @@ interface DepartmentType {
 export default function LoginForm() {
   const classes = useStyles()
   const dispatch = useDispatch()
+
+  const [ministry, setMinistry] = useState(null)
+  const [department, setDepartment] = useState(null)
+  const [departmentList, setDepartmentList] = useState([])
   const [values, setValues] = useState({
     password: '',
     showPassword: false,
   })
+
+  const { items: ministries } = useSelector((state: any) => state.ministry)
+  const { items: departments } = useSelector((state: any) => state.department)
+  const { messageLogin } = useSelector((state: any) => state.login)
 
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,14 +95,6 @@ export default function LoginForm() {
     event.preventDefault()
   }
 
-  const linkToForgotPassword = () => {
-    window.open(`${process.env.REACT_APP_PORTAL_URL}forget`, '_blank')
-  }
-
-  const linkToSignUp = () => {
-    window.open(`${process.env.REACT_APP_PORTAL_URL}signup`, '_blank')
-  }
-
   const { register, handleSubmit, errors } = useForm({
     mode: 'onSubmit',
     validationSchema: yup.object().shape({
@@ -105,17 +103,16 @@ export default function LoginForm() {
   })
 
   const onLogin = (loginInfo: any) => {
-    const actionLogin = actions.loadLogin({
-      department,
-      password: loginInfo.password,
-    })
+    const actionLogin = actions.loadLogin(
+      {
+        department,
+        password: loginInfo.password,
+      },
+      ministry,
+      department
+    )
     dispatch(actionLogin)
   }
-
-  const { messageLogin } = useSelector((state: any) => state.login)
-
-  const [ministry, setMinistry] = useState(null)
-  const [department, setDepartment] = useState(null)
 
   const handleChangeMinistry = (event: any) => {
     const value = event.target.value
@@ -132,11 +129,6 @@ export default function LoginForm() {
     const load_ministry_action = ministryActions.loadMinistry()
     dispatch(load_ministry_action)
   }, [dispatch])
-
-  const { items: ministries } = useSelector((state: any) => state.ministry)
-  const { items: departments } = useSelector((state: any) => state.department)
-
-  const [departmentList, setDepartmentList] = useState([])
 
   useEffect(() => {
     setDepartmentList(departments)
