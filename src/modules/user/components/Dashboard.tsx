@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import queryString from 'query-string'
-import { get, isEmpty } from 'lodash'
+import { get, isEmpty, size } from 'lodash'
 
 import { Toolbar, Container, Typography, Button, Grid } from '@material-ui/core'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -304,16 +304,18 @@ export default function Dashboard() {
         {renderSearchSection()}
         <Grid container justify='space-between' style={{ margin: '24px 0' }}>
           <Typography variant='h6' component='h1' style={{ fontWeight: 600 }}>
-            ผลการค้นหา ({tableData.length} รายการ)
+            ผลการค้นหา ({size(tableData)} รายการ)
           </Typography>
-          <Button
-            variant='outlined'
-            color='secondary'
-            onClick={loadNewCivilServants}
-            startIcon={<ReplayIcon />}
-          >
-            โหลดใหม่
-          </Button>
+          {!isEmpty(tableData) && (
+            <Button
+              variant='outlined'
+              color='secondary'
+              onClick={loadNewCivilServants}
+              startIcon={<ReplayIcon />}
+            >
+              โหลดใหม่
+            </Button>
+          )}
         </Grid>
         <TestTable tableData={tableData} loading={isLoading} />
       </Container>
