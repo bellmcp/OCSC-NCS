@@ -1,10 +1,8 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { getCookie, eraseCookie } from 'utils/cookies'
-import queryString from 'query-string'
-import { get } from 'lodash'
 
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import {
