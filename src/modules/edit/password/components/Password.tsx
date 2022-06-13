@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
+
 import {
   TextField,
   Button,
@@ -12,19 +13,16 @@ import {
   Paper,
   Toolbar,
   Grid,
-  Divider,
-  Box,
   Chip,
   Container,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Person as PersonIcon,
   Lock as LockIcon,
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
-  ArrowForwardIos as ArrowForwardIcon,
 } from '@material-ui/icons'
+
 import * as actions from '../actions'
 import { isLoginAsAdmin } from 'utils/isLogin'
 
@@ -163,7 +161,7 @@ export default function Password() {
                 />
               )}
             </Grid>
-            <form className={classes.form}>
+            <form className={classes.form} noValidate>
               <TextField
                 autoComplete='new-password'
                 inputProps={{

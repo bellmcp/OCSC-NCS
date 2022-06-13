@@ -1,13 +1,16 @@
 import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
+
 import PrivateRoute from 'modules/routes/PrivateRoute'
 import PrivateAdminRoute from 'modules/routes/PrivateAdminRoute'
-import NotFound from './NotFound'
+
+import Login from 'modules/login/components/Login'
+import AdminLogin from 'modules/adminlogin/components/AdminLogin'
 
 import UserRoutes from 'modules/user/components/Routes'
-import Login from 'modules/login/components/Login'
-import AdminLogin from 'modules/adminlogin/components/Login'
 import PasswordRoutes from 'modules/edit/password/components/Routes'
+
+import NotFound from './NotFound'
 
 const PATH = process.env.REACT_APP_BASE_PATH
 
