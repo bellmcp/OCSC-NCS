@@ -80,7 +80,6 @@ export default function Dashboard() {
   const [ministry, setMinistry] = useState('')
   const [department, setDepartment] = useState('')
 
-  const ministryId = getCookie('ministryId')
   const departmentId = getCookie('departmentId')
   const ministryName = getCookie('ministryName')
   const departmentName = getCookie('departmentName')
