@@ -125,6 +125,13 @@ export default function Password() {
     }
   }, [values])
 
+  useEffect(() => {
+    return () => {
+      const clear_message_action = actions.clearMessageChangePassword()
+      dispatch(clear_message_action)
+    }
+  }, []) //eslint-disable-line
+
   const hasEmptyFields =
     values.currentPassword === '' ||
     values.newPassword === '' ||

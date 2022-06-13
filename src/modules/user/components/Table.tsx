@@ -1,5 +1,9 @@
 import React from 'react'
 import { get } from 'lodash'
+import { useDispatch } from 'react-redux'
+import moment from 'moment'
+import 'moment/locale/th'
+
 import {
   DataGrid,
   GridColDef,
@@ -20,8 +24,6 @@ import Stack from '@mui/material/Stack'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import { createTheme, ThemeProvider, alpha, styled } from '@mui/material/styles'
-import moment from 'moment'
-import 'moment/locale/th'
 
 import {
   CheckCircle as CheckIcon,
@@ -29,6 +31,8 @@ import {
   Replay as ReplayIcon,
 } from '@material-ui/icons'
 import { green, red } from '@material-ui/core/colors'
+
+import * as actions from '../actions'
 
 const ODD_OPACITY = 0.1
 moment.locale('th')
@@ -213,148 +217,6 @@ function renderCellExpand(params: GridRenderCellParams<string>) {
   )
 }
 
-const columns: GridColDef[] = [
-  {
-    field: 'order',
-    headerName: 'ลำดับที่',
-    width: 80,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'title',
-    headerName: 'คำนำหน้าชื่อ',
-    minWidth: 100,
-    renderCell: renderCellExpand,
-  },
-  {
-    field: 'firstName',
-    headerName: 'ชื่อ',
-    minWidth: 150,
-    renderCell: renderCellExpand,
-  },
-  {
-    field: 'lastName',
-    headerName: 'นามสกุล',
-    minWidth: 150,
-    renderCell: renderCellExpand,
-  },
-  {
-    field: 'jobStartDate',
-    headerName: 'วันที่รับราชการ',
-    minWidth: 150,
-    valueFormatter: (params) => {
-      if (params.value == null) {
-        return ''
-      }
-      return moment(params.value).add(543, 'year').format('ll')
-    },
-  },
-  {
-    field: 'jobType',
-    headerName: 'ประเภทตำแหน่ง',
-    minWidth: 150,
-    renderCell: renderCellExpand,
-  },
-  {
-    field: 'ministry',
-    headerName: 'กระทรวง',
-    minWidth: 200,
-    renderCell: renderCellExpand,
-  },
-  {
-    field: 'department',
-    headerName: 'กรม',
-    minWidth: 200,
-    renderCell: renderCellExpand,
-  },
-  {
-    field: 'jobTitle',
-    headerName: 'ตำแหน่ง',
-    minWidth: 200,
-    renderCell: renderCellExpand,
-  },
-  {
-    field: 'jobLevel',
-    headerName: 'ระดับ',
-    minWidth: 150,
-    renderCell: renderCellExpand,
-  },
-  {
-    field: 'orientationDate',
-    headerName: 'ปฐมนิเทศ',
-    minWidth: 150,
-    valueFormatter: (params) => {
-      if (params.value == null) {
-        return 'ไม่ผ่าน'
-      }
-      const date = moment(params.value).add(543, 'year').format('ll')
-      return `ผ่าน, ${date}`
-    },
-    renderCell: (params) => renderStatusAndDateCell(params, 'orientation'),
-  },
-  {
-    field: 'eLearningDate',
-    headerName: 'หลักสูตรฝึกอบรมข้าราชการบรรจุใหม่ (E-Learning)',
-    minWidth: 350,
-    valueFormatter: (params) => {
-      if (params.value == null) {
-        return 'ไม่ผ่าน'
-      }
-      const date = moment(params.value).add(543, 'year').format('ll')
-      return `ผ่าน, ${date}`
-    },
-    renderCell: (params) => renderStatusAndDateCell(params, 'eLearning'),
-    // renderHeader: (params) => (
-    //   <span style={{ lineHeight: 1.2, fontWeight: 500 }}>
-    //     หลักสูตรฝึกอบรมข้าราชการบรรจุใหม่
-    //     <br />
-    //     (E-Learning)
-    //   </span>
-    // ),
-  },
-  {
-    field: 'jointTrainingDate',
-    headerName: 'อบรมสัมมนาร่วมกัน',
-    minWidth: 150,
-    valueFormatter: (params) => {
-      if (params.value == null) {
-        return 'ไม่ผ่าน'
-      }
-      const date = moment(params.value).add(543, 'year').format('ll')
-      return `ผ่าน, ${date}`
-    },
-    renderCell: (params) => renderStatusAndDateCell(params, 'jointTraining'),
-  },
-  {
-    field: 'lastUpdate',
-    headerName: 'วันเวลาที่อัพเดทข้อมูล',
-    minWidth: 180,
-    valueFormatter: (params) => {
-      if (params.value == null) {
-        return ''
-      }
-      const text = moment(params.value).add(543, 'year').format('lll')
-      return `${text.replaceAll(' เวลา', '')} น.`
-    },
-  },
-  {
-    field: 'action',
-    headerName: 'โหลดใหม่',
-    minWidth: 100,
-    disableColumnMenu: true,
-    disableReorder: true,
-    disableExport: true,
-    headerAlign: 'center',
-    align: 'center',
-    renderCell: (params) => (
-      <IconButton size='small'>
-        <ReplayIcon />
-      </IconButton>
-    ),
-  },
-]
-
 function CustomToolbar() {
   return (
     <GridToolbarContainer
@@ -375,7 +237,154 @@ function CustomToolbar() {
   )
 }
 
-export default function TestTable({ tableData, loading }: any) {
+export default function Table({ tableData, loading }: any) {
+  const dispatch = useDispatch()
+
+  const requestRowUpdate = (citizenId: string, order: string) => {
+    const load_row_data_action = actions.loadRowData(String(citizenId), order)
+    dispatch(load_row_data_action)
+  }
+
+  const columns: GridColDef[] = [
+    {
+      field: 'order',
+      headerName: 'ลำดับที่',
+      width: 80,
+      headerAlign: 'center',
+      align: 'center',
+    },
+    {
+      field: 'title',
+      headerName: 'คำนำหน้าชื่อ',
+      minWidth: 100,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'firstName',
+      headerName: 'ชื่อ',
+      minWidth: 150,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'lastName',
+      headerName: 'นามสกุล',
+      minWidth: 150,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'jobStartDate',
+      headerName: 'วันที่รับราชการ',
+      minWidth: 150,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return ''
+        }
+        return moment(params.value).add(543, 'year').format('ll')
+      },
+    },
+    {
+      field: 'jobType',
+      headerName: 'ประเภทตำแหน่ง',
+      minWidth: 150,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'ministry',
+      headerName: 'กระทรวง',
+      minWidth: 200,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'department',
+      headerName: 'กรม',
+      minWidth: 200,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'jobTitle',
+      headerName: 'ตำแหน่ง',
+      minWidth: 200,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'jobLevel',
+      headerName: 'ระดับ',
+      minWidth: 150,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'orientationDate',
+      headerName: 'ปฐมนิเทศ',
+      minWidth: 150,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return 'ไม่ผ่าน'
+        }
+        const date = moment(params.value).add(543, 'year').format('ll')
+        return `ผ่าน, ${date}`
+      },
+      renderCell: (params) => renderStatusAndDateCell(params, 'orientation'),
+    },
+    {
+      field: 'eLearningDate',
+      headerName: 'หลักสูตรฝึกอบรมข้าราชการบรรจุใหม่ (E-Learning)',
+      minWidth: 350,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return 'ไม่ผ่าน'
+        }
+        const date = moment(params.value).add(543, 'year').format('ll')
+        return `ผ่าน, ${date}`
+      },
+      renderCell: (params) => renderStatusAndDateCell(params, 'eLearning'),
+    },
+    {
+      field: 'jointTrainingDate',
+      headerName: 'อบรมสัมมนาร่วมกัน',
+      minWidth: 150,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return 'ไม่ผ่าน'
+        }
+        const date = moment(params.value).add(543, 'year').format('ll')
+        return `ผ่าน, ${date}`
+      },
+      renderCell: (params) => renderStatusAndDateCell(params, 'jointTraining'),
+    },
+    {
+      field: 'lastUpdate',
+      headerName: 'วันเวลาที่อัพเดทข้อมูล',
+      minWidth: 180,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return ''
+        }
+        const text = moment(params.value).add(543, 'year').format('lll')
+        return `${text.replaceAll(' เวลา', '')} น.`
+      },
+    },
+    {
+      field: 'action',
+      headerName: 'โหลดใหม่',
+      minWidth: 100,
+      disableColumnMenu: true,
+      disableReorder: true,
+      disableExport: true,
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: (params) => {
+        return (
+          <IconButton
+            size='small'
+            onClick={() => requestRowUpdate(params.row.id, params.row.order)}
+          >
+            <ReplayIcon />
+          </IconButton>
+        )
+      },
+    },
+  ]
+
   return (
     <ThemeProvider theme={theme}>
       <div style={{ minHeight: 500 }}>

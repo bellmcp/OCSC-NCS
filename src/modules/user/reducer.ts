@@ -1,7 +1,7 @@
 import {
-  LOAD_USER_REQUEST,
-  LOAD_USER_SUCCESS,
-  LOAD_USER_FAILURE,
+  ROW_UPDATE_REQUEST,
+  ROW_UPDATE_SUCCESS,
+  ROW_UPDATE_FAILURE,
   LOAD_NEW_CIVIL_SERVANTS_REQUEST,
   LOAD_NEW_CIVIL_SERVANTS_SUCCESS,
   LOAD_NEW_CIVIL_SERVANTS_FAILURE,
@@ -9,28 +9,19 @@ import {
 
 const initialState = {
   isLoading: false,
+  isUpdating: false,
   items: [],
   newCivilServants: [],
+  rowData: [],
 }
 
 export default function (state = initialState, action: any) {
   switch (action.type) {
-    case LOAD_USER_REQUEST:
+    case ROW_UPDATE_REQUEST:
       return {
         ...state,
-        isLoading: true,
-        items: [],
-      }
-    case LOAD_USER_SUCCESS:
-      return {
-        ...state,
-        isLoading: false,
-        items: action.payload.users,
-      }
-    case LOAD_USER_FAILURE:
-      return {
-        ...state,
-        isLoading: false,
+        isUpdating: true,
+        rowData: [],
       }
     case LOAD_NEW_CIVIL_SERVANTS_REQUEST:
       return {
@@ -38,11 +29,23 @@ export default function (state = initialState, action: any) {
         isLoading: true,
         newCivilServants: [],
       }
+    case ROW_UPDATE_SUCCESS:
+      return {
+        ...state,
+        isUpdating: false,
+        rowData: action.payload.rowData,
+      }
     case LOAD_NEW_CIVIL_SERVANTS_SUCCESS:
       return {
         ...state,
         isLoading: false,
         newCivilServants: action.payload.newCivilServants,
+      }
+    case ROW_UPDATE_FAILURE:
+      return {
+        ...state,
+        isUpdating: false,
+        rowData: [],
       }
     case LOAD_NEW_CIVIL_SERVANTS_FAILURE:
       return {

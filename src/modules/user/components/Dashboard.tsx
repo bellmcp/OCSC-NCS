@@ -68,9 +68,11 @@ function createData(
 export default function Dashboard() {
   const dispatch = useDispatch()
 
-  const { newCivilServants, isLoading = false } = useSelector(
-    (state: any) => state.user
-  )
+  const {
+    newCivilServants,
+    isLoading = false,
+    rowData,
+  } = useSelector((state: any) => state.user)
   const { items: ministries } = useSelector((state: any) => state.ministry)
   const { items: departments } = useSelector((state: any) => state.department)
 
@@ -83,6 +85,18 @@ export default function Dashboard() {
   const departmentId = getCookie('departmentId')
   const ministryName = getCookie('ministryName')
   const departmentName = getCookie('departmentName')
+
+  useEffect(() => {
+    const newTableData = tableData.map((data) =>
+      String(data.id) === String(rowData.id)
+        ? {
+            ...rowData,
+            order: data.order,
+          }
+        : data
+    )
+    setTableData(newTableData)
+  }, [rowData]) //eslint-disable-line
 
   useEffect(() => {
     if (isLoginAsUser()) {
@@ -167,9 +181,9 @@ export default function Dashboard() {
         <Grid container style={{ margin: '12px 0' }} spacing={2}>
           <Grid item xs={3} style={{ paddingLeft: 0 }}>
             <FormControl variant='outlined' fullWidth size='small'>
-              <InputLabel id='demo-simple-select-label'>กระทรวง</InputLabel>
+              <InputLabel id='ministry-select-label'>กระทรวง</InputLabel>
               <Select
-                labelId='demo-simple-select-label'
+                labelId='ministry-select-label'
                 value={ministry}
                 label='กระทรวง'
                 variant='outlined'
@@ -283,6 +297,7 @@ export default function Dashboard() {
     if (tableMaxWidth === 'lg') setTableMaxWidth(false)
     else setTableMaxWidth('lg')
   }
+  console.log('tableData', tableData)
 
   return (
     <>
