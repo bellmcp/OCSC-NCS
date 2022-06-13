@@ -12,7 +12,7 @@ import {
   Paper,
   Toolbar,
   Grid,
-  Divider,
+  Chip,
   Box,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -104,15 +104,21 @@ export default function LoginForm() {
   return (
     <Paper className={classes.paper} elevation={0}>
       <Toolbar />
-      <Grid container direction='row' justify='center' alignItems='center'>
+      <Grid container direction='column' justify='center' alignItems='center'>
         <Typography
           component='h1'
           variant='h4'
           style={{ fontWeight: 600 }}
           gutterBottom
         >
-          ผู้ดูแลระบบ
+          เข้าสู่ระบบ
         </Typography>
+        <Chip
+          label='ผู้ดูแลระบบ'
+          color='primary'
+          variant='outlined'
+          style={{ marginBottom: 16, fontSize: 14, fontWeight: 500 }}
+        />
       </Grid>
       <Typography
         component='h2'

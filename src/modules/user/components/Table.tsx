@@ -2,9 +2,7 @@ import React from 'react'
 import { get } from 'lodash'
 import {
   DataGrid,
-  GridRowsProp,
   GridColDef,
-  GridToolbar,
   bgBG,
   GridRenderCellParams,
   gridClasses,
@@ -20,6 +18,7 @@ import Paper from '@mui/material/Paper'
 import Popper from '@mui/material/Popper'
 import Stack from '@mui/material/Stack'
 import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
 import { createTheme, ThemeProvider, alpha, styled } from '@mui/material/styles'
 import moment from 'moment'
 import 'moment/locale/th'
@@ -27,10 +26,11 @@ import 'moment/locale/th'
 import {
   CheckCircle as CheckIcon,
   Cancel as CancelIcon,
+  Replay as ReplayIcon,
 } from '@material-ui/icons'
 import { green, red } from '@material-ui/core/colors'
 
-const ODD_OPACITY = 0.05
+const ODD_OPACITY = 0.1
 moment.locale('th')
 
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
@@ -217,8 +217,9 @@ const columns: GridColDef[] = [
   {
     field: 'order',
     headerName: 'ลำดับที่',
-    minWidth: 80,
-    renderCell: renderCellExpand,
+    width: 80,
+    headerAlign: 'center',
+    align: 'center',
   },
   {
     field: 'title',
@@ -283,12 +284,26 @@ const columns: GridColDef[] = [
     field: 'orientationDate',
     headerName: 'ปฐมนิเทศ',
     minWidth: 150,
+    valueFormatter: (params) => {
+      if (params.value == null) {
+        return 'ไม่ผ่าน'
+      }
+      const date = moment(params.value).add(543, 'year').format('ll')
+      return `ผ่าน, ${date}`
+    },
     renderCell: (params) => renderStatusAndDateCell(params, 'orientation'),
   },
   {
     field: 'eLearningDate',
     headerName: 'หลักสูตรฝึกอบรมข้าราชการบรรจุใหม่ (E-Learning)',
     minWidth: 350,
+    valueFormatter: (params) => {
+      if (params.value == null) {
+        return 'ไม่ผ่าน'
+      }
+      const date = moment(params.value).add(543, 'year').format('ll')
+      return `ผ่าน, ${date}`
+    },
     renderCell: (params) => renderStatusAndDateCell(params, 'eLearning'),
     // renderHeader: (params) => (
     //   <span style={{ lineHeight: 1.2, fontWeight: 500 }}>
@@ -302,6 +317,13 @@ const columns: GridColDef[] = [
     field: 'jointTrainingDate',
     headerName: 'อบรมสัมมนาร่วมกัน',
     minWidth: 150,
+    valueFormatter: (params) => {
+      if (params.value == null) {
+        return 'ไม่ผ่าน'
+      }
+      const date = moment(params.value).add(543, 'year').format('ll')
+      return `ผ่าน, ${date}`
+    },
     renderCell: (params) => renderStatusAndDateCell(params, 'jointTraining'),
   },
   {
@@ -315,6 +337,21 @@ const columns: GridColDef[] = [
       const text = moment(params.value).add(543, 'year').format('lll')
       return `${text.replaceAll(' เวลา', '')} น.`
     },
+  },
+  {
+    field: 'action',
+    headerName: 'โหลดใหม่',
+    minWidth: 100,
+    disableColumnMenu: true,
+    disableReorder: true,
+    disableExport: true,
+    headerAlign: 'center',
+    align: 'center',
+    renderCell: (params) => (
+      <IconButton size='small'>
+        <ReplayIcon />
+      </IconButton>
+    ),
   },
 ]
 
@@ -332,7 +369,7 @@ function CustomToolbar() {
         <Divider orientation='vertical' light flexItem />
         <GridToolbarDensitySelector />
         <Divider orientation='vertical' light flexItem />
-        <GridToolbarExport />
+        <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
       </Stack>
     </GridToolbarContainer>
   )

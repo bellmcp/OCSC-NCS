@@ -17,7 +17,13 @@ function clearMessageLogin() {
   }
 }
 
-function loadLogin(userInfo: any, ministry: string, department: string) {
+function loadLogin(
+  userInfo: any,
+  ministry: string,
+  department: string,
+  ministryName: string,
+  departmentName: string
+) {
   return async (dispatch: any) => {
     dispatch({ type: LOAD_LOGIN_REQUEST })
     try {
@@ -40,7 +46,11 @@ function loadLogin(userInfo: any, ministry: string, department: string) {
         },
       })
       setCookie('token', result.data.token, 3)
-      dispatch(push(`${PATH}?ministry=${ministry}&department=${department}`))
+      setCookie('ministryId', ministry, 3)
+      setCookie('departmentId', department, 3)
+      setCookie('ministryName', ministryName, 3)
+      setCookie('departmentName', departmentName, 3)
+      dispatch(push(`${PATH}`))
       dispatch(uiActions.setFlashMessage('เข้าสู่ระบบเรียบร้อยแล้ว', 'success'))
     } catch (err) {
       if (err?.response?.status === 401) {

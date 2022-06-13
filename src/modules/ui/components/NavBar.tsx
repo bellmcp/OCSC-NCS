@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
-import { eraseCookie } from 'utils/cookies'
+import { getCookie, eraseCookie } from 'utils/cookies'
 import queryString from 'query-string'
 import { get } from 'lodash'
 
@@ -42,11 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
     },
     title: {
-      display: 'none',
       marginRight: theme.spacing(4),
-      [theme.breakpoints.up('sm')]: {
-        display: 'block',
-      },
       '&:hover': {
         cursor: 'pointer',
       },
@@ -160,8 +156,7 @@ export default function NavBar(props) {
   const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
-  const { search } = useLocation()
-  const { department: departmentId } = queryString.parse(search)
+  const departmentName = getCookie('departmentName')
 
   const PATH = process.env.REACT_APP_BASE_PATH
   const LogoImage = require('assets/images/logo.svg')
@@ -169,16 +164,9 @@ export default function NavBar(props) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null)
-  const [departmentList, setDepartmentList] = useState([])
-
-  const { items: departments } = useSelector((state: any) => state.department)
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
-
-  useEffect(() => {
-    setDepartmentList(departments)
-  }, [departments])
 
   const linkToHome = () => {
     handleMenuClose()
@@ -201,6 +189,10 @@ export default function NavBar(props) {
   const logout = () => {
     handleMenuClose()
     eraseCookie('token')
+    eraseCookie('ministryId')
+    eraseCookie('departmentId')
+    eraseCookie('ministryName')
+    eraseCookie('departmentName')
     dispatch(uiActions.setFlashMessage('ออกจากระบบเรียบร้อยแล้ว', 'success'))
     if (isLoginAsAdmin()) {
       setTimeout(() => {
@@ -234,16 +226,9 @@ export default function NavBar(props) {
   const menuId = 'primary-search-account-menu'
   const mobileMenuId = 'primary-search-account-menu-mobile'
 
-  const getDepartmentLabel = () => {
-    const result = departmentList.find(
-      (department: any) => String(department.id) === departmentId
-    )
-    return get(result, 'name', '')
-  }
-
   const getUsernameLabel = () => {
     if (isLoginAsAdmin()) return 'ผู้ดูแลระบบ'
-    else if (isLoginAsUser()) return getDepartmentLabel()
+    else if (isLoginAsUser()) return departmentName
     else return 'เข้าสู่ระบบ'
   }
 
@@ -277,16 +262,27 @@ export default function NavBar(props) {
                 รายงานผลการพัฒนาในช่วงการทดลองปฏิบัติหน้าที่ราชการ
               </Typography>
             </Hidden>
+            <Hidden lgUp implementation='css'>
+              <Typography
+                color='textPrimary'
+                variant='h6'
+                noWrap
+                onClick={linkToHome}
+              >
+                รายงานผลการพัฒนาฯ
+              </Typography>
+            </Hidden>
             <div className={classes.grow} />
             {/* DESKTOP DROPDOWN */}
             <div className={classes.sectionDesktop}>
               <Button
+                onClick={handleProfileMenuOpen}
+                disabled={!isLoggedIn}
                 color='primary'
-                disabled
                 size='small'
                 style={{
                   borderRadius: 50,
-                  padding: '10px 10px',
+                  padding: '8px 10px',
                   margin: '6px 0',
                 }}
                 startIcon={
@@ -294,25 +290,14 @@ export default function NavBar(props) {
                     className={isLoggedIn ? classes.loggedIn : classes.small}
                   />
                 }
+                endIcon={
+                  isLoggedIn && <ArrowDownIcon style={{ fontSize: 24 }} />
+                }
               >
                 <Typography color='textPrimary' className={classes.bold} noWrap>
                   {usernameLabel}
                 </Typography>
               </Button>
-              {isLoggedIn && (
-                <IconButton
-                  color='primary'
-                  edge='end'
-                  aria-label='Toggle user dropdown menu'
-                  aria-controls={menuId}
-                  onClick={handleProfileMenuOpen}
-                  style={{
-                    margin: '6px 0',
-                  }}
-                >
-                  <ArrowDownIcon />
-                </IconButton>
-              )}
             </div>
             {/* MOBILE DROPDOWN */}
             <Hidden only={['xs', 'lg', 'md', 'xl']}>

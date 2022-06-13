@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
-import queryString from 'query-string'
 import { get, isEmpty, size } from 'lodash'
 
 import { Toolbar, Container, Typography, Button, Grid } from '@material-ui/core'
@@ -9,10 +7,17 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
-import { Replay as ReplayIcon } from '@material-ui/icons'
+import Stack from '@mui/material/Stack'
+import {
+  Replay as ReplayIcon,
+  Search as SearchIcon,
+  UnfoldLess as ShrinkIcon,
+  UnfoldMore as ExpandIcon,
+} from '@material-ui/icons'
 
-import TestTable from './TestTable'
+import Table from './Table'
 import { isLoginAsAdmin, isLoginAsUser } from 'utils/isLogin'
+import { getCookie } from 'utils/cookies'
 
 import * as actions from '../actions'
 import * as ministryActions from 'modules/ministry/actions'
@@ -62,9 +67,6 @@ function createData(
 
 export default function Dashboard() {
   const dispatch = useDispatch()
-  const { search } = useLocation()
-  const { ministry: ministryId, department: departmentId } =
-    queryString.parse(search)
 
   const { newCivilServants, isLoading = false } = useSelector(
     (state: any) => state.user
@@ -78,6 +80,11 @@ export default function Dashboard() {
   const [ministry, setMinistry] = useState('')
   const [department, setDepartment] = useState('')
 
+  const ministryId = getCookie('ministryId')
+  const departmentId = getCookie('departmentId')
+  const ministryName = getCookie('ministryName')
+  const departmentName = getCookie('departmentName')
+
   useEffect(() => {
     if (isLoginAsUser()) {
       const load_new_civil_servants_action = actions.loadNewCivilServants(
@@ -88,14 +95,9 @@ export default function Dashboard() {
   }, [dispatch, departmentId])
 
   useEffect(() => {
-    const load_ministry_action = ministryActions.loadMinistry()
-    dispatch(load_ministry_action)
-  }, [dispatch])
-
-  useEffect(() => {
-    if (isLoginAsUser()) {
-      const load_department_action = departmentActions.loadAllDepartment()
-      dispatch(load_department_action)
+    if (isLoginAsAdmin()) {
+      const load_ministry_action = ministryActions.loadMinistry()
+      dispatch(load_ministry_action)
     }
   }, [dispatch])
 
@@ -134,14 +136,6 @@ export default function Dashboard() {
     )
   }, [newCivilServants])
 
-  useEffect(() => {
-    setMinistry(String(ministryId))
-  }, [ministryId])
-
-  useEffect(() => {
-    setDepartment(String(departmentId))
-  }, [departmentId])
-
   const loadNewCivilServants = () => {
     if (isLoginAsAdmin()) {
       const load_new_civil_servants_action = actions.loadNewCivilServants(
@@ -161,6 +155,7 @@ export default function Dashboard() {
     setMinistry(value)
     const load_department_action = departmentActions.loadDepartment(value)
     dispatch(load_department_action)
+    setDepartment('')
   }
 
   const handleChangeDepartment = (event) => {
@@ -220,8 +215,10 @@ export default function Dashboard() {
             <Button
               variant='contained'
               color='secondary'
-              style={{ height: 40 }}
+              style={{ height: 40, width: 92 }}
+              disabled={department === ''}
               onClick={loadNewCivilServants}
+              startIcon={<SearchIcon />}
             >
               ค้นหา
             </Button>
@@ -233,24 +230,17 @@ export default function Dashboard() {
         <Grid container style={{ margin: '12px 0' }} spacing={2}>
           <Grid item xs={3} style={{ paddingLeft: 0 }}>
             <FormControl variant='outlined' fullWidth size='small'>
-              <InputLabel id='demo-simple-select-label'>กระทรวง</InputLabel>
+              <InputLabel id='ministry-select-label'>กระทรวง</InputLabel>
               <Select
-                labelId='demo-simple-select-label'
+                labelId='ministry-select-label'
                 disabled
-                value={ministry}
+                value={ministryName}
                 label='กระทรวง'
                 variant='outlined'
-                onChange={handleChangeMinistry}
               >
-                {ministryList.map((ministry: any) => (
-                  <MenuItem
-                    dense
-                    key={String(ministry.id)}
-                    value={String(ministry.id)}
-                  >
-                    {ministry.name}
-                  </MenuItem>
-                ))}
+                <MenuItem dense value={ministryName}>
+                  {ministryName}
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -260,20 +250,13 @@ export default function Dashboard() {
               <Select
                 labelId='department-select-label'
                 disabled
-                value={department}
+                value={departmentName}
                 label='กรม'
                 variant='outlined'
-                onChange={handleChangeDepartment}
               >
-                {departmentList.map((department: any) => (
-                  <MenuItem
-                    dense
-                    key={String(department.id)}
-                    value={String(department.id)}
-                  >
-                    {department.name}
-                  </MenuItem>
-                ))}
+                <MenuItem dense value={departmentName}>
+                  {departmentName}
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -282,7 +265,8 @@ export default function Dashboard() {
               variant='contained'
               color='secondary'
               disabled
-              style={{ height: 40 }}
+              style={{ height: 40, width: 92 }}
+              startIcon={<SearchIcon />}
             >
               ค้นหา
             </Button>
@@ -294,10 +278,17 @@ export default function Dashboard() {
     }
   }
 
+  const [tableMaxWidth, setTableMaxWidth] = useState<any>('lg')
+
+  const handleSwitchTableMaxWidth = () => {
+    if (tableMaxWidth === 'lg') setTableMaxWidth(false)
+    else setTableMaxWidth('lg')
+  }
+
   return (
     <>
       <Toolbar />
-      <Container maxWidth='lg' style={{ marginTop: 36, marginBottom: 36 }}>
+      <Container maxWidth='lg' style={{ marginTop: 36 }}>
         <Typography variant='h5' component='h1' style={{ fontWeight: 600 }}>
           ค้นหาข้าราชการใหม่ (บรรจุไม่เกิน 1 ปี)
         </Typography>
@@ -306,18 +297,38 @@ export default function Dashboard() {
           <Typography variant='h6' component='h1' style={{ fontWeight: 600 }}>
             ผลการค้นหา ({size(tableData)} รายการ)
           </Typography>
-          {!isEmpty(tableData) && (
+          <Stack direction='row' spacing={2}>
+            {!isEmpty(tableData) && (
+              <Button
+                size='small'
+                variant='outlined'
+                color='secondary'
+                onClick={loadNewCivilServants}
+                startIcon={<ReplayIcon />}
+              >
+                โหลดใหม่
+              </Button>
+            )}
             <Button
+              size='small'
               variant='outlined'
               color='secondary'
-              onClick={loadNewCivilServants}
-              startIcon={<ReplayIcon />}
+              onClick={handleSwitchTableMaxWidth}
+              startIcon={
+                tableMaxWidth === 'lg' ? (
+                  <ExpandIcon style={{ transform: 'rotate(90deg)' }} />
+                ) : (
+                  <ShrinkIcon style={{ transform: 'rotate(90deg)' }} />
+                )
+              }
             >
-              โหลดใหม่
+              {tableMaxWidth === 'lg' ? 'ขยาย' : 'ย่อ'}ตาราง
             </Button>
-          )}
+          </Stack>
         </Grid>
-        <TestTable tableData={tableData} loading={isLoading} />
+      </Container>
+      <Container maxWidth={tableMaxWidth} style={{ marginBottom: 36 }}>
+        <Table tableData={tableData} loading={isLoading} />
       </Container>
     </>
   )

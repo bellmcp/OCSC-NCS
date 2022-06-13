@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
+import { get } from 'lodash'
 import {
   TextField,
   Button,
@@ -70,6 +71,7 @@ export default function LoginForm() {
 
   const [ministry, setMinistry] = useState(null)
   const [department, setDepartment] = useState(null)
+  const [ministryList, setMinistryList] = useState([])
   const [departmentList, setDepartmentList] = useState([])
   const [values, setValues] = useState({
     password: '',
@@ -102,6 +104,20 @@ export default function LoginForm() {
     }),
   })
 
+  const getMinistryLabel = (ministryId: string) => {
+    const result = ministryList.find(
+      (ministry: any) => String(ministry.id) === String(ministryId)
+    )
+    return get(result, 'name', '')
+  }
+
+  const getDepartmentLabel = (departmentId: string) => {
+    const result = departmentList.find(
+      (department: any) => String(department.id) === String(departmentId)
+    )
+    return get(result, 'name', '')
+  }
+
   const onLogin = (loginInfo: any) => {
     const actionLogin = actions.loadLogin(
       {
@@ -109,7 +125,9 @@ export default function LoginForm() {
         password: loginInfo.password,
       },
       ministry,
-      department
+      department,
+      getMinistryLabel(ministry),
+      getDepartmentLabel(department)
     )
     dispatch(actionLogin)
   }
@@ -134,6 +152,10 @@ export default function LoginForm() {
     setDepartmentList(departments)
   }, [departments])
 
+  useEffect(() => {
+    setMinistryList(ministries)
+  }, [ministries])
+
   return (
     <Paper className={classes.paper} elevation={0}>
       <Toolbar />
@@ -141,7 +163,7 @@ export default function LoginForm() {
         <Typography
           component='h1'
           variant='h4'
-          style={{ fontWeight: 600, marginBottom: 48 }}
+          style={{ fontWeight: 600, marginBottom: 32 }}
         >
           เข้าสู่ระบบ
         </Typography>
@@ -173,7 +195,7 @@ export default function LoginForm() {
               getContentAnchorEl: null,
             }}
           >
-            {ministries.map((ministry: MinistryType) => (
+            {ministryList.map((ministry: MinistryType) => (
               <MenuItem dense key={ministry.id} value={ministry.id}>
                 {ministry.name}
               </MenuItem>

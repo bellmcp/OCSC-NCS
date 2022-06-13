@@ -15,6 +15,42 @@ const LOAD_USER_REQUEST = 'learning-platform/user/LOAD_USER_REQUEST'
 const LOAD_USER_SUCCESS = 'learning-platform/user/LOAD_USER_SUCCESS'
 const LOAD_USER_FAILURE = 'learning-platform/user/LOAD_USER_FAILURE'
 
+function loadCivilServantRow(citizenId: string) {
+  return async (dispatch: any) => {
+    dispatch({ type: LOAD_NEW_CIVIL_SERVANTS_REQUEST })
+    try {
+      const token = getCookie('token')
+      var { data } = await axios.get(`/newcivilservants/${citizenId}`, {
+        baseURL: `${process.env.REACT_APP_PORTAL_API_URL}`,
+        params: {
+          departmentId,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if (data.length === 0) {
+        data = []
+      }
+      dispatch({
+        type: LOAD_NEW_CIVIL_SERVANTS_SUCCESS,
+        payload: {
+          newCivilServants: data,
+        },
+      })
+      dispatch(uiActions.setFlashMessage('โหลดข้อมูลสำเร็จ', 'success'))
+    } catch (err) {
+      dispatch({ type: LOAD_NEW_CIVIL_SERVANTS_FAILURE })
+      dispatch(
+        uiActions.setFlashMessage(
+          `อัพเดทข้อมูลรายชื่อข้าราชการใหม่ไม่สำเร็จ เกิดข้อผิดพลาด ${err?.response?.status}`,
+          'error'
+        )
+      )
+    }
+  }
+}
+
 function loadNewCivilServants(departmentId: string) {
   return async (dispatch: any) => {
     const token = getCookie('token')
@@ -40,6 +76,7 @@ function loadNewCivilServants(departmentId: string) {
           newCivilServants: data,
         },
       })
+      dispatch(uiActions.setFlashMessage('โหลดข้อมูลสำเร็จ', 'success'))
     } catch (err) {
       dispatch({ type: LOAD_NEW_CIVIL_SERVANTS_FAILURE })
       dispatch(
@@ -51,6 +88,7 @@ function loadNewCivilServants(departmentId: string) {
     }
   }
 }
+
 function loadUser() {
   return async (dispatch: any) => {
     const token = getCookie('token')

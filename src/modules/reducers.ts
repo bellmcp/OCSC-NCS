@@ -7,6 +7,7 @@ import user from 'modules/user/reducer'
 import ui from 'modules/ui/reducer'
 import ministry from 'modules/ministry/reducer'
 import department from 'modules/department/reducer'
+import password from 'modules/edit/password/reducer'
 
 export default (history: any) =>
   combineReducers({
@@ -17,4 +18,5 @@ export default (history: any) =>
     ui,
     ministry,
     department,
+    password,
   })
