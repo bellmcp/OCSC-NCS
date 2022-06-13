@@ -39,6 +39,9 @@ function changePassword(submitValues: any) {
 
       const result = await axios.put(path, submitValues, {
         baseURL,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
       dispatch({
         type: CHANGE_PASSWORD_SUCCESS,
