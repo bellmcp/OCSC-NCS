@@ -14,9 +14,10 @@ const LOAD_NEW_CIVIL_SERVANTS_SUCCESS =
 const LOAD_NEW_CIVIL_SERVANTS_FAILURE =
   'learning-platform/user/LOAD_NEW_CIVIL_SERVANTS_FAILURE'
 
-function loadRowData(citizenId: string, order: string) {
+function loadRowData(citizenId: string, name: string) {
   return async (dispatch: any) => {
     dispatch({ type: ROW_UPDATE_REQUEST })
+    dispatch(uiActions.setFlashMessage('กำลังโหลด...', 'info'))
     try {
       const token = getCookie('token')
       var { data } = await axios.get(`/newcivilservants/${citizenId}`, {
@@ -35,16 +36,13 @@ function loadRowData(citizenId: string, order: string) {
         },
       })
       dispatch(
-        uiActions.setFlashMessage(
-          `อัพเดทข้อมูลแถวที่ ${order} สำเร็จ`,
-          'success'
-        )
+        uiActions.setFlashMessage(`อัพเดทข้อมูล ${name} สำเร็จ`, 'success')
       )
     } catch (err) {
       dispatch({ type: ROW_UPDATE_FAILURE })
       dispatch(
         uiActions.setFlashMessage(
-          `อัพเดทข้อมูลแถวที่ ${order} ไม่สำเร็จ เกิดข้อผิดพลาด ${err?.response?.status}`,
+          `อัพเดทข้อมูล ${name} ไม่สำเร็จ เกิดข้อผิดพลาด ${err?.response?.status}`,
           'error'
         )
       )

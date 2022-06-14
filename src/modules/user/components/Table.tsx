@@ -240,8 +240,8 @@ function CustomToolbar() {
 export default function Table({ tableData, loading }: any) {
   const dispatch = useDispatch()
 
-  const requestRowUpdate = (citizenId: string, order: string) => {
-    const load_row_data_action = actions.loadRowData(String(citizenId), order)
+  const requestRowUpdate = (citizenId: string, name: string) => {
+    const load_row_data_action = actions.loadRowData(String(citizenId), name)
     dispatch(load_row_data_action)
   }
 
@@ -370,13 +370,15 @@ export default function Table({ tableData, loading }: any) {
       disableColumnMenu: true,
       disableReorder: true,
       disableExport: true,
+      filterable: false,
       headerAlign: 'center',
       align: 'center',
       renderCell: (params) => {
+        const name = `${params.row.title} ${params.row.firstName} ${params.row.lastName}`
         return (
           <IconButton
             size='small'
-            onClick={() => requestRowUpdate(params.row.id, params.row.order)}
+            onClick={() => requestRowUpdate(params.row.id, name)}
           >
             <ReplayIcon />
           </IconButton>
