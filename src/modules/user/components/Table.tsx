@@ -33,6 +33,8 @@ import {
 import { green, red } from '@material-ui/core/colors'
 
 import * as actions from '../actions'
+import { getCookie } from 'utils/cookies'
+import { isLoginAsAdmin } from 'utils/isLogin'
 
 const ODD_OPACITY = 0.1
 moment.locale('th')
@@ -217,32 +219,42 @@ function renderCellExpand(params: GridRenderCellParams<string>) {
   )
 }
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer
-      sx={{
-        paddingLeft: '6px',
-      }}
-    >
-      <Stack direction='row' spacing={2} alignItems='center'>
-        <GridToolbarColumnsButton />
-        <Divider orientation='vertical' light flexItem />
-        <GridToolbarFilterButton />
-        <Divider orientation='vertical' light flexItem />
-        <GridToolbarDensitySelector />
-        <Divider orientation='vertical' light flexItem />
-        <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
-      </Stack>
-    </GridToolbarContainer>
-  )
-}
-
-export default function Table({ tableData, loading }: any) {
+export default function Table({ tableData, loading, getDepartmentLabel }: any) {
   const dispatch = useDispatch()
 
   const requestRowUpdate = (citizenId: string, name: string) => {
     const load_row_data_action = actions.loadRowData(String(citizenId), name)
     dispatch(load_row_data_action)
+  }
+
+  function CustomToolbar() {
+    const isAdmin = isLoginAsAdmin()
+    const departmentName = getCookie('departmentName')
+
+    return (
+      <GridToolbarContainer
+        sx={{
+          paddingLeft: '6px',
+        }}
+      >
+        <Stack direction='row' spacing={2} alignItems='center'>
+          <GridToolbarColumnsButton />
+          <Divider orientation='vertical' light flexItem />
+          <GridToolbarFilterButton />
+          <Divider orientation='vertical' light flexItem />
+          <GridToolbarDensitySelector />
+          <Divider orientation='vertical' light flexItem />
+          <GridToolbarExport
+            printOptions={{ disableToolbarButton: true }}
+            csvOptions={{
+              fileName: `รายงานผลการพัฒนาฯ - ${
+                isAdmin ? getDepartmentLabel() : departmentName
+              }`,
+            }}
+          />
+        </Stack>
+      </GridToolbarContainer>
+    )
   }
 
   const columns: GridColDef[] = [

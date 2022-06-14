@@ -67,6 +67,8 @@ function createData(
 
 export default function Dashboard() {
   const dispatch = useDispatch()
+  const isAdmin = isLoginAsAdmin()
+  const isUser = isLoginAsUser()
 
   const {
     newCivilServants,
@@ -99,20 +101,20 @@ export default function Dashboard() {
   }, [rowData]) //eslint-disable-line
 
   useEffect(() => {
-    if (isLoginAsUser()) {
+    if (isUser) {
       const load_new_civil_servants_action = actions.loadNewCivilServants(
         String(departmentId)
       )
       dispatch(load_new_civil_servants_action)
     }
-  }, [dispatch, departmentId])
+  }, [dispatch, departmentId, isUser])
 
   useEffect(() => {
-    if (isLoginAsAdmin()) {
+    if (isAdmin) {
       const load_ministry_action = ministryActions.loadMinistry()
       dispatch(load_ministry_action)
     }
-  }, [dispatch])
+  }, [dispatch, isAdmin])
 
   useEffect(() => {
     setMinistryList(ministries)
@@ -150,7 +152,7 @@ export default function Dashboard() {
   }, [newCivilServants])
 
   const loadNewCivilServants = () => {
-    if (isLoginAsAdmin()) {
+    if (isAdmin) {
       const load_new_civil_servants_action = actions.loadNewCivilServants(
         String(department)
       )
@@ -176,10 +178,10 @@ export default function Dashboard() {
   }
 
   const renderSearchSection = () => {
-    if (isLoginAsAdmin()) {
+    if (isAdmin) {
       return (
         <Grid container style={{ margin: '12px 0' }} spacing={2}>
-          <Grid item xs={3} style={{ paddingLeft: 0 }}>
+          <Grid item xs={5} md={3} style={{ paddingLeft: 0 }}>
             <FormControl variant='outlined' fullWidth size='small'>
               <InputLabel id='ministry-select-label'>กระทรวง</InputLabel>
               <Select
@@ -201,7 +203,7 @@ export default function Dashboard() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={5} md={3}>
             <FormControl variant='outlined' fullWidth size='small'>
               <InputLabel id='department-select-label'>กรม</InputLabel>
               <Select
@@ -224,7 +226,7 @@ export default function Dashboard() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} md={2}>
             <Button
               variant='contained'
               color='secondary'
@@ -238,10 +240,10 @@ export default function Dashboard() {
           </Grid>
         </Grid>
       )
-    } else if (isLoginAsUser()) {
+    } else if (isUser) {
       return (
         <Grid container style={{ margin: '12px 0' }} spacing={2}>
-          <Grid item xs={3} style={{ paddingLeft: 0 }}>
+          <Grid item xs={5} md={3} style={{ paddingLeft: 0 }}>
             <FormControl variant='outlined' fullWidth size='small'>
               <InputLabel id='ministry-select-label'>กระทรวง</InputLabel>
               <Select
@@ -257,7 +259,7 @@ export default function Dashboard() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={5} md={3}>
             <FormControl variant='outlined' fullWidth size='small'>
               <InputLabel id='department-select-label'>กรม</InputLabel>
               <Select
@@ -273,7 +275,7 @@ export default function Dashboard() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} md={2}>
             <Button
               variant='contained'
               color='secondary'
@@ -287,7 +289,7 @@ export default function Dashboard() {
         </Grid>
       )
     } else {
-      return <>ERROR</>
+      return <>เกิดข้อผิดพลาด โปรดลองใหม่อีกครั้ง</>
     }
   }
 
@@ -297,7 +299,13 @@ export default function Dashboard() {
     if (tableMaxWidth === 'lg') setTableMaxWidth(false)
     else setTableMaxWidth('lg')
   }
-  console.log('tableData', tableData)
+
+  const getDepartmentLabel = () => {
+    const result = departmentList.find(
+      (item: any) => String(item.id) === String(department)
+    )
+    return get(result, 'name', '')
+  }
 
   return (
     <>
@@ -342,7 +350,11 @@ export default function Dashboard() {
         </Grid>
       </Container>
       <Container maxWidth={tableMaxWidth} style={{ marginBottom: 36 }}>
-        <Table tableData={tableData} loading={isLoading} />
+        <Table
+          tableData={tableData}
+          loading={isLoading}
+          getDepartmentLabel={getDepartmentLabel}
+        />
       </Container>
     </>
   )

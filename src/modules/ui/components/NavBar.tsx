@@ -156,6 +156,9 @@ export default function NavBar(props) {
   const dispatch = useDispatch()
   const departmentName = getCookie('departmentName')
 
+  const isAdmin = isLoginAsAdmin()
+  const isUser = isLoginAsUser()
+
   const PATH = process.env.REACT_APP_BASE_PATH
   const LogoImage = require('assets/images/logo.svg')
 
@@ -168,7 +171,7 @@ export default function NavBar(props) {
 
   const linkToHome = () => {
     handleMenuClose()
-    if (isLoginAsAdmin()) {
+    if (isAdmin) {
       history.push(`${PATH}/admin`)
     } else {
       history.push(`${PATH}`)
@@ -177,7 +180,7 @@ export default function NavBar(props) {
 
   const linkToChangePassword = () => {
     handleMenuClose()
-    if (isLoginAsAdmin()) {
+    if (isAdmin) {
       history.push(`${PATH}/admin/edit/password`)
     } else {
       history.push(`${PATH}/edit/password`)
@@ -192,11 +195,11 @@ export default function NavBar(props) {
     eraseCookie('ministryName')
     eraseCookie('departmentName')
     dispatch(uiActions.setFlashMessage('ออกจากระบบเรียบร้อยแล้ว', 'success'))
-    if (isLoginAsAdmin()) {
+    if (isAdmin) {
       setTimeout(() => {
         history.push(`${PATH}/admin/login`)
       }, 1000)
-    } else if (isLoginAsUser()) {
+    } else if (isUser) {
       setTimeout(() => {
         history.push(`${PATH}/login`)
       }, 1000)
@@ -225,13 +228,13 @@ export default function NavBar(props) {
   const mobileMenuId = 'primary-search-account-menu-mobile'
 
   const getUsernameLabel = () => {
-    if (isLoginAsAdmin()) return 'ผู้ดูแลระบบ'
-    else if (isLoginAsUser()) return departmentName
+    if (isAdmin) return 'ผู้ดูแลระบบ'
+    else if (isUser) return departmentName
     else return 'เข้าสู่ระบบ'
   }
 
   const checkIsLoggedIn = () => {
-    return isLoginAsAdmin() || isLoginAsUser()
+    return isAdmin || isUser
   }
 
   const isLoggedIn = checkIsLoggedIn()
@@ -265,6 +268,7 @@ export default function NavBar(props) {
                 color='textPrimary'
                 variant='h6'
                 noWrap
+                className={classes.title}
                 onClick={linkToHome}
               >
                 รายงานผลการพัฒนาฯ
