@@ -10,8 +10,7 @@ import META_IMAGE from './meta.jpg'
 
 const TITLE = 'รายงานผลการพัฒนาในช่วงการทดลองปฏิบัติหน้าที่ราชการ'
 const URL = process.env.REACT_APP_PLATFORM_URL
-const DESCRIPTION =
-  'โลกแห่งการเรียนรู้ ไม่มีวันจบสิ้น ยิ่งเรียนยิ่งรู้ ยิ่งเพิ่มพลังทางปัญญา'
+const DESCRIPTION = 'สำนักงาน ก.พ.'
 
 const store = configureStore()
 

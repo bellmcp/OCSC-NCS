@@ -5,14 +5,11 @@ import { getCookie } from 'utils/cookies'
 import * as uiActions from 'modules/ui/actions'
 import { isLoginAsAdmin } from 'utils/isLogin'
 
-const CHANGE_PASSWORD_REQUEST =
-  'learning-platform/login/CHANGE_PASSWORD_REQUEST'
-const CHANGE_PASSWORD_SUCCESS =
-  'learning-platform/login/CHANGE_PASSWORD_SUCCESS'
-const CHANGE_PASSWORD_FAILURE =
-  'learning-platform/login/CHANGE_PASSWORD_FAILURE'
+const CHANGE_PASSWORD_REQUEST = 'ocsc-ncs/edit/password/CHANGE_PASSWORD_REQUEST'
+const CHANGE_PASSWORD_SUCCESS = 'ocsc-ncs/edit/password/CHANGE_PASSWORD_SUCCESS'
+const CHANGE_PASSWORD_FAILURE = 'ocsc-ncs/edit/password/CHANGE_PASSWORD_FAILURE'
 const CLEAR_MESSAGE_CHANGE_PASSWORD =
-  'learning-platform/login/CLEAR_MESSAGE_CHANGE_PASSWORD'
+  'ocsc-ncs/edit/password/CLEAR_MESSAGE_CHANGE_PASSWORD'
 
 const PATH = process.env.REACT_APP_BASE_PATH
 

@@ -3,16 +3,16 @@ import axios from 'axios'
 import { getCookie } from 'utils/cookies'
 import * as uiActions from 'modules/ui/actions'
 
-const ROW_UPDATE_REQUEST = 'learning-platform/user/ROW_UPDATE_REQUEST'
-const ROW_UPDATE_SUCCESS = 'learning-platform/user/ROW_UPDATE_SUCCESS'
-const ROW_UPDATE_FAILURE = 'learning-platform/user/ROW_UPDATE_FAILURE'
+const ROW_UPDATE_REQUEST = 'ocsc-ncs/user/ROW_UPDATE_REQUEST'
+const ROW_UPDATE_SUCCESS = 'ocsc-ncs/user/ROW_UPDATE_SUCCESS'
+const ROW_UPDATE_FAILURE = 'ocsc-ncs/user/ROW_UPDATE_FAILURE'
 
 const LOAD_NEW_CIVIL_SERVANTS_REQUEST =
-  'learning-platform/user/LOAD_NEW_CIVIL_SERVANTS_REQUEST'
+  'ocsc-ncs/user/LOAD_NEW_CIVIL_SERVANTS_REQUEST'
 const LOAD_NEW_CIVIL_SERVANTS_SUCCESS =
-  'learning-platform/user/LOAD_NEW_CIVIL_SERVANTS_SUCCESS'
+  'ocsc-ncs/user/LOAD_NEW_CIVIL_SERVANTS_SUCCESS'
 const LOAD_NEW_CIVIL_SERVANTS_FAILURE =
-  'learning-platform/user/LOAD_NEW_CIVIL_SERVANTS_FAILURE'
+  'ocsc-ncs/user/LOAD_NEW_CIVIL_SERVANTS_FAILURE'
 
 function loadRowData(citizenId: string, name: string) {
   return async (dispatch: any) => {

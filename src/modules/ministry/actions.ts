@@ -2,9 +2,9 @@ import axios from 'axios'
 import { get } from 'lodash'
 import * as uiActions from 'modules/ui/actions'
 
-const LOAD_MINISTRY_REQUEST = 'learning-platform/ministry/LOAD_MINISTRY_REQUEST'
-const LOAD_MINISTRY_SUCCESS = 'learning-platform/ministry/LOAD_MINISTRY_SUCCESS'
-const LOAD_MINISTRY_FAILURE = 'learning-platform/ministry/LOAD_MINISTRY_FAILURE'
+const LOAD_MINISTRY_REQUEST = 'ocsc-ncs/ministry/LOAD_MINISTRY_REQUEST'
+const LOAD_MINISTRY_SUCCESS = 'ocsc-ncs/ministry/LOAD_MINISTRY_SUCCESS'
+const LOAD_MINISTRY_FAILURE = 'ocsc-ncs/ministry/LOAD_MINISTRY_FAILURE'
 
 function loadMinistry() {
   return async (dispatch: any) => {

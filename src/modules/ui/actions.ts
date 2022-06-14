@@ -1,12 +1,13 @@
 // @ts-nocheck
 import axios from 'axios'
 
-const SET_FLASH_MESSAGE = 'learning-platform/ui/SET_FLASH_MESSAGE'
-const CLEAR_FLASH_MESSAGE = 'learning-platform/ui/CLEAR_FLASH_MESSAGE'
-const SET_LEARN_EXIT_DIALOG = 'learning-platform/ui/SET_LEARN_EXIT_DIALOG'
-const LOAD_FOOTER_INFO_REQUEST = 'learning-platform/ui/LOAD_FOOTER_INFO_REQUEST'
-const LOAD_FOOTER_INFO_SUCCESS = 'learning-platform/ui/LOAD_FOOTER_INFO_SUCCESS'
-const LOAD_FOOTER_INFO_FAILURE = 'learning-platform/ui/LOAD_FOOTER_INFO_FAILURE'
+const SET_FLASH_MESSAGE = 'ocsc-ncs/ui/SET_FLASH_MESSAGE'
+const CLEAR_FLASH_MESSAGE = 'ocsc-ncs/ui/CLEAR_FLASH_MESSAGE'
+const SET_LEARN_EXIT_DIALOG = 'ocsc-ncs/ui/SET_LEARN_EXIT_DIALOG'
+
+const LOAD_FOOTER_INFO_REQUEST = 'ocsc-ncs/ui/LOAD_FOOTER_INFO_REQUEST'
+const LOAD_FOOTER_INFO_SUCCESS = 'ocsc-ncs/ui/LOAD_FOOTER_INFO_SUCCESS'
+const LOAD_FOOTER_INFO_FAILURE = 'ocsc-ncs/ui/LOAD_FOOTER_INFO_FAILURE'
 
 function setFlashMessage(message: string, severity: string) {
   return {
@@ -53,7 +54,7 @@ function loadFooterInfo() {
       dispatch({ type: LOAD_FOOTER_INFO_FAILURE })
       dispatch(
         setFlashMessage(
-          `โหลดประวัติการติดต่อเจ้าหน้าที่ไม่สำเร็จ เกิดข้อผิดพลาด ${err?.response?.status}`,
+          `โหลดข้อมูลการติดต่อสำนักงาน ก.พ. ไม่สำเร็จ เกิดข้อผิดพลาด ${err?.response?.status}`,
           'error'
         )
       )

@@ -4,10 +4,10 @@ import { push } from 'connected-react-router'
 import { setCookie } from 'utils/cookies'
 import * as uiActions from 'modules/ui/actions'
 
-const LOAD_LOGIN_REQUEST = 'learning-platform/login/LOAD_LOGIN_REQUEST'
-const LOAD_LOGIN_SUCCESS = 'learning-platform/login/LOAD_LOGIN_SUCCESS'
-const LOAD_LOGIN_FAILURE = 'learning-platform/login/LOAD_LOGIN_FAILURE'
-const CLEAR_MESSAGE_LOGIN = 'learning-platform/login/CLEAR_MESSAGE_LOGIN'
+const LOAD_LOGIN_REQUEST = 'ocsc-ncs/login/LOAD_LOGIN_REQUEST'
+const LOAD_LOGIN_SUCCESS = 'ocsc-ncs/login/LOAD_LOGIN_SUCCESS'
+const LOAD_LOGIN_FAILURE = 'ocsc-ncs/login/LOAD_LOGIN_FAILURE'
+const CLEAR_MESSAGE_LOGIN = 'ocsc-ncs/login/CLEAR_MESSAGE_LOGIN'
 
 const PATH = process.env.REACT_APP_BASE_PATH
 
