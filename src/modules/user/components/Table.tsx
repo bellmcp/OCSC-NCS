@@ -247,6 +247,8 @@ export default function Table({ tableData, loading, getDepartmentLabel }: any) {
           <GridToolbarExport
             printOptions={{ disableToolbarButton: true }}
             csvOptions={{
+              delimiter: ',',
+              utf8WithBom: true,
               fileName: `รายงานผลการพัฒนาฯ - ${
                 isAdmin ? getDepartmentLabel() : departmentName
               }`,
