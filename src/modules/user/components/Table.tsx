@@ -179,19 +179,27 @@ const GridCellExpand = React.memo(function GridCellExpand(
   )
 })
 
-const renderStatusAndDateCell = (params: any, fieldName: string) => {
-  let result = ''
-  const flag = get(params, `row.${fieldName}Flag`, false)
-  const date = get(params, `row.${fieldName}Date`, null)
+const renderDateValue = (params: any) => {
+  if (params.value === null) return '-'
+  return moment(params.value).add(543, 'year').format('ll')
+}
 
-  if (date === null) {
-    result = '-'
-  } else {
-    result = moment(date).add(543, 'year').format('ll')
+const renderStatusValue = (params: any) => {
+  switch (params.value) {
+    case true:
+      return 'ผ่าน'
+    case false:
+      return 'ไม่ผ่าน'
+    default:
+      return '-'
   }
+}
+
+const renderStatusCell = (params: any, fieldName: string) => {
+  const flag = get(params, `row.${fieldName}Flag`, false)
 
   return (
-    <Stack direction='row' spacing={2} alignItems='center'>
+    <Stack direction='row' alignItems='center'>
       {flag ? (
         <CheckIcon
           style={{
@@ -205,7 +213,6 @@ const renderStatusAndDateCell = (params: any, fieldName: string) => {
           }}
         />
       )}
-      <div>{result}</div>
     </Stack>
   )
 }
@@ -327,43 +334,43 @@ export default function Table({ tableData, loading, getDepartmentLabel }: any) {
       renderCell: renderCellExpand,
     },
     {
-      field: 'orientationDate',
+      field: 'orientationFlag',
       headerName: 'ปฐมนิเทศ',
+      minWidth: 100,
+      valueFormatter: (params) => renderStatusValue(params),
+      renderCell: (params) => renderStatusCell(params, 'orientation'),
+    },
+    {
+      field: 'orientationDate',
+      headerName: 'วันที่ผ่านปฐมนิเทศ',
       minWidth: 150,
-      valueFormatter: (params) => {
-        if (params.value == null) {
-          return 'ไม่ผ่าน'
-        }
-        const date = moment(params.value).add(543, 'year').format('ll')
-        return `ผ่าน, ${date}`
-      },
-      renderCell: (params) => renderStatusAndDateCell(params, 'orientation'),
+      valueFormatter: (params) => renderDateValue(params),
+    },
+    {
+      field: 'eLearningFlag',
+      headerName: 'หลักสูตรฝึกอบรมข้าราชการบรรจุใหม่ (E-Learning)',
+      minWidth: 350,
+      valueFormatter: (params) => renderStatusValue(params),
+      renderCell: (params) => renderStatusCell(params, 'eLearning'),
     },
     {
       field: 'eLearningDate',
-      headerName: 'หลักสูตรฝึกอบรมข้าราชการบรรจุใหม่ (E-Learning)',
-      minWidth: 350,
-      valueFormatter: (params) => {
-        if (params.value == null) {
-          return 'ไม่ผ่าน'
-        }
-        const date = moment(params.value).add(543, 'year').format('ll')
-        return `ผ่าน, ${date}`
-      },
-      renderCell: (params) => renderStatusAndDateCell(params, 'eLearning'),
+      headerName: 'วันที่ผ่านหลักสูตร',
+      minWidth: 150,
+      valueFormatter: (params) => renderDateValue(params),
+    },
+    {
+      field: 'jointTrainingFlag',
+      headerName: 'อบรมสัมมนาร่วมกัน',
+      minWidth: 150,
+      valueFormatter: (params) => renderStatusValue(params),
+      renderCell: (params) => renderStatusCell(params, 'jointTraining'),
     },
     {
       field: 'jointTrainingDate',
-      headerName: 'อบรมสัมมนาร่วมกัน',
+      headerName: 'วันที่ผ่านอบรม',
       minWidth: 150,
-      valueFormatter: (params) => {
-        if (params.value == null) {
-          return 'ไม่ผ่าน'
-        }
-        const date = moment(params.value).add(543, 'year').format('ll')
-        return `ผ่าน, ${date}`
-      },
-      renderCell: (params) => renderStatusAndDateCell(params, 'jointTraining'),
+      valueFormatter: (params) => renderDateValue(params),
     },
     {
       field: 'lastUpdate',
