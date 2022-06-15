@@ -5,6 +5,7 @@ import {
   Menu,
   Avatar,
   Divider,
+  ListItem,
   ListItemIcon,
   ListItemText,
   Typography,
@@ -72,7 +73,7 @@ export default function NavDropdownMobile({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <ListItem>
         <ListItemIcon color='inherit'>
           <Avatar className={isLoggedIn ? classes.loggedIn : classes.small} />
         </ListItemIcon>
@@ -84,7 +85,8 @@ export default function NavDropdownMobile({
             </Typography>
           }
         />
-      </MenuItem>
+      </ListItem>
+      <Divider style={{ marginTop: 8 }} />
       {isLoggedIn && (
         <MenuItem onClick={linkToHome}>
           <ListItemIcon color='inherit'>
