@@ -386,7 +386,7 @@ export default function Table({ tableData, loading, getDepartmentLabel }: any) {
     },
     {
       field: 'action',
-      headerName: 'โหลดใหม่',
+      headerName: 'อัพเดทข้อมูล',
       minWidth: 100,
       disableColumnMenu: true,
       disableReorder: true,

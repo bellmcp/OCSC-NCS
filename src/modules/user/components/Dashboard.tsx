@@ -9,7 +9,6 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import Stack from '@mui/material/Stack'
 import {
-  Replay as ReplayIcon,
   Search as SearchIcon,
   UnfoldLess as ShrinkIcon,
   UnfoldMore as ExpandIcon,
@@ -320,17 +319,6 @@ export default function Dashboard() {
             ผลการค้นหา ({size(tableData)} รายการ)
           </Typography>
           <Stack direction='row' spacing={2}>
-            {!isEmpty(tableData) && (
-              <Button
-                size='small'
-                variant='outlined'
-                color='secondary'
-                onClick={loadNewCivilServants}
-                startIcon={<ReplayIcon />}
-              >
-                โหลดใหม่
-              </Button>
-            )}
             <Button
               size='small'
               variant='outlined'
