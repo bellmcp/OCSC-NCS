@@ -153,11 +153,11 @@ export default function Dashboard() {
           isAdmin ? currentDepartmentLabel : departmentName,
           item.jobTitle,
           getJobLevelLabel(item.jobLevelId),
-          item.orientationFlag,
+          item.orientationFlag ? 'ผ่าน' : 'ไม่ผ่าน',
           item.orientationDate,
-          item.eLearningFlag,
+          item.eLearningFlag ? 'ผ่าน' : 'ไม่ผ่าน',
           item.eLearningDate,
-          item.jointTrainingFlag,
+          item.jointTrainingFlag ? 'ผ่าน' : 'ไม่ผ่าน',
           item.jointTrainingDate,
           item.lastUpdate
         )

@@ -23,6 +23,7 @@ import Popper from '@mui/material/Popper'
 import Stack from '@mui/material/Stack'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 import { createTheme, ThemeProvider, alpha, styled } from '@mui/material/styles'
 
 import {
@@ -184,34 +185,27 @@ const renderDateValue = (params: any) => {
   return moment(params.value).add(543, 'year').format('ll')
 }
 
-const renderStatusValue = (params: any) => {
-  switch (params.value) {
-    case true:
-      return 'ผ่าน'
-    case false:
-      return 'ไม่ผ่าน'
-    default:
-      return '-'
-  }
-}
-
 const renderStatusCell = (params: any, fieldName: string) => {
   const flag = get(params, `row.${fieldName}Flag`, false)
 
   return (
     <Stack direction='row' alignItems='center'>
-      {flag ? (
-        <CheckIcon
-          style={{
-            color: green[800],
-          }}
-        />
+      {flag === 'ผ่าน' ? (
+        <Tooltip title='ผ่าน'>
+          <CheckIcon
+            style={{
+              color: green[800],
+            }}
+          />
+        </Tooltip>
       ) : (
-        <CancelIcon
-          style={{
-            color: red[800],
-          }}
-        />
+        <Tooltip title='ไม่ผ่าน'>
+          <CancelIcon
+            style={{
+              color: red[800],
+            }}
+          />
+        </Tooltip>
       )}
     </Stack>
   )
@@ -341,7 +335,6 @@ export default function Table({
       field: 'orientationFlag',
       headerName: 'ปฐมนิเทศ',
       minWidth: 100,
-      valueFormatter: (params) => renderStatusValue(params),
       renderCell: (params) => renderStatusCell(params, 'orientation'),
     },
     {
@@ -354,7 +347,6 @@ export default function Table({
       field: 'eLearningFlag',
       headerName: 'หลักสูตรฝึกอบรมข้าราชการบรรจุใหม่ (E-Learning)',
       minWidth: 350,
-      valueFormatter: (params) => renderStatusValue(params),
       renderCell: (params) => renderStatusCell(params, 'eLearning'),
     },
     {
@@ -367,7 +359,6 @@ export default function Table({
       field: 'jointTrainingFlag',
       headerName: 'อบรมสัมมนาร่วมกัน',
       minWidth: 150,
-      valueFormatter: (params) => renderStatusValue(params),
       renderCell: (params) => renderStatusCell(params, 'jointTraining'),
     },
     {
