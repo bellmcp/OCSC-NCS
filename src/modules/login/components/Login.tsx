@@ -256,7 +256,7 @@ export default function Login() {
                 autoComplete='on'
                 helperText={errors.password ? 'กรุณากรอกรหัสผ่าน' : null}
                 error={!!errors.password}
-                style={{ letterSpacing: ' 0.25em' }}
+                style={{ letterSpacing: ' 0.05em' }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position='start'>

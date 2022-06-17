@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { get, isEmpty, size } from 'lodash'
 
@@ -21,6 +21,7 @@ import { getCookie } from 'utils/cookies'
 import * as actions from '../actions'
 import * as ministryActions from 'modules/ministry/actions'
 import * as departmentActions from 'modules/department/actions'
+import * as jobActions from 'modules/job/actions'
 
 function createData(
   order: any,
@@ -76,12 +77,14 @@ export default function Dashboard() {
   } = useSelector((state: any) => state.user)
   const { items: ministries } = useSelector((state: any) => state.ministry)
   const { items: departments } = useSelector((state: any) => state.department)
+  const { jobTypes, jobLevels } = useSelector((state: any) => state.job)
 
   const [tableData, setTableData] = useState([])
   const [ministryList, setMinistryList] = useState([])
   const [departmentList, setDepartmentList] = useState([])
   const [ministry, setMinistry] = useState('')
   const [department, setDepartment] = useState('')
+  const [tableMaxWidth, setTableMaxWidth] = useState<any>('lg')
 
   const departmentId = getCookie('departmentId')
   const ministryName = getCookie('ministryName')
@@ -116,6 +119,14 @@ export default function Dashboard() {
   }, [dispatch, isAdmin])
 
   useEffect(() => {
+    const load_job_level_action = jobActions.loadJobLevel()
+    dispatch(load_job_level_action)
+
+    const load_job_type_action = jobActions.loadJobType()
+    dispatch(load_job_type_action)
+  }, [dispatch])
+
+  useEffect(() => {
     setMinistryList(ministries)
   }, [ministries])
 
@@ -133,11 +144,11 @@ export default function Dashboard() {
           item.firstName,
           item.lastName,
           item.jobStartDate,
-          item.jobType,
-          item.ministry,
-          item.department,
+          getJobTypeLabel(item.jobTypeId),
+          isAdmin ? currentMinistryLabel : ministryName,
+          isAdmin ? currentDepartmentLabel : departmentName,
           item.jobTitle,
-          item.jobLevel,
+          getJobLevelLabel(item.jobLevelId),
           item.orientationFlag,
           item.orientationDate,
           item.eLearningFlag,
@@ -148,7 +159,7 @@ export default function Dashboard() {
         )
       )
     )
-  }, [newCivilServants])
+  }, [newCivilServants]) //eslint-disable-line
 
   const loadNewCivilServants = () => {
     if (isAdmin) {
@@ -175,6 +186,47 @@ export default function Dashboard() {
   const handleChangeDepartment = (event) => {
     setDepartment(event.target.value)
   }
+
+  const handleSwitchTableMaxWidth = () => {
+    if (tableMaxWidth === 'lg') setTableMaxWidth(false)
+    else setTableMaxWidth('lg')
+  }
+
+  const getJobTypeLabel = (jobTypeId) => {
+    const result = jobTypes.find(
+      (item: any) => String(item.id) === String(jobTypeId)
+    )
+    return get(result, 'name', '')
+  }
+
+  const getJobLevelLabel = (jobLevelId) => {
+    const result = jobLevels.find(
+      (item: any) => String(item.id) === String(jobLevelId)
+    )
+    return get(result, 'name', '')
+  }
+
+  const getMinistryLabel = (ministry) => {
+    const result = ministryList.find(
+      (item: any) => String(item.id) === String(ministry)
+    )
+    return get(result, 'name', '')
+  }
+
+  const getDepartmentLabel = (department) => {
+    const result = departmentList.find(
+      (item: any) => String(item.id) === String(department)
+    )
+    return get(result, 'name', '')
+  }
+
+  const currentMinistryLabel = useMemo(() => {
+    return getMinistryLabel(ministry)
+  }, [ministry]) //eslint-disable-line
+
+  const currentDepartmentLabel = useMemo(() => {
+    return getDepartmentLabel(department)
+  }, [department]) //eslint-disable-line
 
   const renderSearchSection = () => {
     if (isAdmin) {
@@ -292,20 +344,6 @@ export default function Dashboard() {
     }
   }
 
-  const [tableMaxWidth, setTableMaxWidth] = useState<any>('lg')
-
-  const handleSwitchTableMaxWidth = () => {
-    if (tableMaxWidth === 'lg') setTableMaxWidth(false)
-    else setTableMaxWidth('lg')
-  }
-
-  const getDepartmentLabel = () => {
-    const result = departmentList.find(
-      (item: any) => String(item.id) === String(department)
-    )
-    return get(result, 'name', '')
-  }
-
   return (
     <>
       <Toolbar />
@@ -341,7 +379,7 @@ export default function Dashboard() {
         <Table
           tableData={tableData}
           loading={isLoading}
-          getDepartmentLabel={getDepartmentLabel}
+          currentDepartmentLabel={currentDepartmentLabel}
         />
       </Container>
     </>

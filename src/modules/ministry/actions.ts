@@ -26,7 +26,7 @@ function loadMinistry() {
       dispatch({ type: LOAD_MINISTRY_FAILURE })
       dispatch(
         uiActions.setFlashMessage(
-          `โหลดข้อมูลกระทรวงไม่สำเร็จ เกิดข้อผิดพลาด ${get(
+          `โหลดรายชื่อกระทรวงไม่สำเร็จ เกิดข้อผิดพลาด ${get(
             err,
             'response.status',
             'บางอย่าง'

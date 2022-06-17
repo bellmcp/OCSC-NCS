@@ -33,7 +33,7 @@ function loadAllDepartment() {
       dispatch({ type: LOAD_DEPARTMENT_FAILURE })
       dispatch(
         uiActions.setFlashMessage(
-          `โหลดข้อมูลกรมทั้งหมดไม่สำเร็จ เกิดข้อผิดพลาด ${get(
+          `โหลดรายชื่อกรมทั้งหมดไม่สำเร็จ เกิดข้อผิดพลาด ${get(
             err,
             'response.status',
             'บางอย่าง'
@@ -65,7 +65,7 @@ function loadDepartment(ministryId: string) {
       dispatch({ type: LOAD_DEPARTMENT_FAILURE })
       dispatch(
         uiActions.setFlashMessage(
-          `โหลดข้อมูลกรมไม่สำเร็จ เกิดข้อผิดพลาด ${get(
+          `โหลดรายชื่อกรมไม่สำเร็จ เกิดข้อผิดพลาด ${get(
             err,
             'response.status',
             'บางอย่าง'

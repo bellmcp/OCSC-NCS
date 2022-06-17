@@ -226,7 +226,11 @@ function renderCellExpand(params: GridRenderCellParams<string>) {
   )
 }
 
-export default function Table({ tableData, loading, getDepartmentLabel }: any) {
+export default function Table({
+  tableData,
+  loading,
+  currentDepartmentLabel,
+}: any) {
   const dispatch = useDispatch()
 
   const requestRowUpdate = (citizenId: string, name: string) => {
@@ -257,7 +261,7 @@ export default function Table({ tableData, loading, getDepartmentLabel }: any) {
               delimiter: ',',
               utf8WithBom: true,
               fileName: `รายงานผลการพัฒนาฯ - ${
-                isAdmin ? getDepartmentLabel() : departmentName
+                isAdmin ? currentDepartmentLabel : departmentName
               }`,
             }}
           />
@@ -310,15 +314,9 @@ export default function Table({ tableData, loading, getDepartmentLabel }: any) {
       renderCell: renderCellExpand,
     },
     {
-      field: 'ministry',
-      headerName: 'กระทรวง',
-      minWidth: 200,
-      renderCell: renderCellExpand,
-    },
-    {
-      field: 'department',
-      headerName: 'กรม',
-      minWidth: 200,
+      field: 'jobLevel',
+      headerName: 'ระดับตำแหน่ง',
+      minWidth: 150,
       renderCell: renderCellExpand,
     },
     {
@@ -328,9 +326,15 @@ export default function Table({ tableData, loading, getDepartmentLabel }: any) {
       renderCell: renderCellExpand,
     },
     {
-      field: 'jobLevel',
-      headerName: 'ระดับ',
-      minWidth: 150,
+      field: 'ministry',
+      headerName: 'กระทรวง',
+      minWidth: 200,
+      renderCell: renderCellExpand,
+    },
+    {
+      field: 'department',
+      headerName: 'กรม',
+      minWidth: 200,
       renderCell: renderCellExpand,
     },
     {
