@@ -77,7 +77,11 @@ export default function Dashboard() {
   } = useSelector((state: any) => state.user)
   const { items: ministries } = useSelector((state: any) => state.ministry)
   const { items: departments } = useSelector((state: any) => state.department)
-  const { jobTypes, jobLevels } = useSelector((state: any) => state.job)
+  const {
+    jobTypes,
+    jobLevels,
+    isLoading: isJobLoading,
+  } = useSelector((state: any) => state.job)
 
   const [tableData, setTableData] = useState([])
   const [ministryList, setMinistryList] = useState([])
@@ -159,7 +163,7 @@ export default function Dashboard() {
         )
       )
     )
-  }, [newCivilServants]) //eslint-disable-line
+  }, [newCivilServants, jobLevels, jobTypes]) //eslint-disable-line
 
   const loadNewCivilServants = () => {
     if (isAdmin) {
@@ -378,7 +382,7 @@ export default function Dashboard() {
       <Container maxWidth={tableMaxWidth} style={{ marginBottom: 36 }}>
         <Table
           tableData={tableData}
-          loading={isLoading}
+          loading={isLoading || isJobLoading}
           currentDepartmentLabel={currentDepartmentLabel}
         />
       </Container>
