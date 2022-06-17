@@ -98,8 +98,24 @@ export default function Dashboard() {
     const newTableData = tableData.map((data) =>
       String(data.id) === String(rowData.id)
         ? {
-            ...rowData,
             order: data.order,
+            id: rowData.id,
+            title: rowData.title,
+            firstName: rowData.firstName,
+            lastName: rowData.lastName,
+            jobStartDate: rowData.jobStartDate,
+            jobType: getJobTypeLabel(rowData.jobTypeId),
+            ministry: isAdmin ? currentMinistryLabel : ministryName,
+            department: isAdmin ? currentDepartmentLabel : departmentName,
+            jobTitle: rowData.jobTitle,
+            jobLevel: getJobLevelLabel(rowData.jobLevelId),
+            orientationFlag: rowData.orientationFlag ? 'ผ่าน' : 'ไม่ผ่าน',
+            orientationDate: rowData.orientationDate,
+            eLearningFlag: rowData.eLearningFlag ? 'ผ่าน' : 'ไม่ผ่าน',
+            eLearningDate: rowData.eLearningDate,
+            jointTrainingFlag: rowData.jointTrainingFlag ? 'ผ่าน' : 'ไม่ผ่าน',
+            jointTrainingDate: rowData.jointTrainingDate,
+            lastUpdate: rowData.lastUpdate,
           }
         : data
     )
@@ -143,7 +159,7 @@ export default function Dashboard() {
       newCivilServants.map((item: any, index: number) =>
         createData(
           index + 1,
-          get(item, 'id', 'ไม่มีข้อมูล'),
+          item.id,
           item.title,
           item.firstName,
           item.lastName,
