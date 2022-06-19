@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { push } from 'connected-react-router'
 import parseJwt from 'utils/parseJwt'
 import { getCookie } from 'utils/cookies'
 import * as uiActions from 'modules/ui/actions'
@@ -10,8 +9,6 @@ const CHANGE_PASSWORD_SUCCESS = 'ocsc-ncs/edit/password/CHANGE_PASSWORD_SUCCESS'
 const CHANGE_PASSWORD_FAILURE = 'ocsc-ncs/edit/password/CHANGE_PASSWORD_FAILURE'
 const CLEAR_MESSAGE_CHANGE_PASSWORD =
   'ocsc-ncs/edit/password/CLEAR_MESSAGE_CHANGE_PASSWORD'
-
-const PATH = process.env.REACT_APP_BASE_PATH
 
 function clearMessageChangePassword() {
   return {
@@ -48,8 +45,10 @@ function changePassword(submitValues: any) {
           message: null,
         },
       })
-      dispatch(push(isAdmin ? `${PATH}/admin` : `${PATH}`))
       dispatch(uiActions.setFlashMessage('เปลี่ยนรหัสผ่านสำเร็จ', 'success'))
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
     } catch (err) {
       dispatch({
         type: CHANGE_PASSWORD_FAILURE,
