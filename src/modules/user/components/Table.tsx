@@ -267,33 +267,62 @@ export default function Table({
   const columns: GridColDef[] = [
     {
       field: 'order',
-      headerName: 'ลำดับที่',
-      width: 80,
+      headerName: 'ลำดับ',
+      width: 60,
       headerAlign: 'center',
       align: 'center',
     },
     {
       field: 'title',
       headerName: 'คำนำหน้าชื่อ',
-      minWidth: 100,
+      headerAlign: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            คำนำ
+            <br />
+            หน้าชื่อ
+          </Typography>
+        )
+      },
+      width: 80,
       renderCell: renderCellExpand,
     },
     {
       field: 'firstName',
       headerName: 'ชื่อ',
-      minWidth: 150,
+      headerAlign: 'center',
+      minWidth: 120,
       renderCell: renderCellExpand,
     },
     {
       field: 'lastName',
       headerName: 'นามสกุล',
-      minWidth: 150,
+      headerAlign: 'center',
+      minWidth: 120,
       renderCell: renderCellExpand,
     },
     {
       field: 'jobStartDate',
       headerName: 'วันที่รับราชการ',
-      minWidth: 150,
+      headerAlign: 'center',
+      align: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            วันที่รับ
+            <br />
+            ราชการ
+          </Typography>
+        )
+      },
+      minWidth: 120,
       valueFormatter: (params) => {
         if (params.value == null) {
           return ''
@@ -304,73 +333,198 @@ export default function Table({
     {
       field: 'jobType',
       headerName: 'ประเภทตำแหน่ง',
-      minWidth: 150,
+      headerAlign: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            ประเภท
+            <br />
+            ตำแหน่ง
+          </Typography>
+        )
+      },
+      minWidth: 100,
       renderCell: renderCellExpand,
     },
     {
       field: 'jobLevel',
       headerName: 'ระดับตำแหน่ง',
-      minWidth: 150,
+      headerAlign: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            ระดับ
+            <br />
+            ตำแหน่ง
+          </Typography>
+        )
+      },
+      minWidth: 100,
       renderCell: renderCellExpand,
     },
     {
       field: 'jobTitle',
       headerName: 'ตำแหน่ง',
-      minWidth: 200,
+      headerAlign: 'center',
+      minWidth: 120,
       renderCell: renderCellExpand,
     },
     {
       field: 'ministry',
       headerName: 'กระทรวง',
-      minWidth: 200,
+      headerAlign: 'center',
+      minWidth: 120,
       renderCell: renderCellExpand,
     },
     {
       field: 'department',
       headerName: 'กรม',
-      minWidth: 200,
+      headerAlign: 'center',
+      minWidth: 120,
       renderCell: renderCellExpand,
     },
     {
       field: 'orientationFlag',
       headerName: 'ปฐมนิเทศ',
+      headerAlign: 'center',
+      align: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            ปฐมนิเทศ
+          </Typography>
+        )
+      },
       minWidth: 100,
       renderCell: (params) => renderStatusCell(params, 'orientation'),
     },
     {
       field: 'orientationDate',
       headerName: 'วันที่ผ่านปฐมนิเทศ',
-      minWidth: 150,
+      headerAlign: 'center',
+      align: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            วันที่ผ่าน
+            <br />
+            ปฐมนิเทศ
+          </Typography>
+        )
+      },
+      minWidth: 120,
       valueFormatter: (params) => renderDateValue(params),
     },
     {
       field: 'eLearningFlag',
-      headerName: 'หลักสูตรฝึกอบรมข้าราชการบรรจุใหม่ (E-Learning)',
-      minWidth: 350,
+      headerName: 'หลักสูตร ขรก ใหม่',
+      headerAlign: 'center',
+      align: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            หลักสูตร
+            <br />
+            ขรก ใหม่
+          </Typography>
+        )
+      },
+      minWidth: 120,
       renderCell: (params) => renderStatusCell(params, 'eLearning'),
     },
     {
       field: 'eLearningDate',
       headerName: 'วันที่ผ่านหลักสูตร',
-      minWidth: 150,
+      headerAlign: 'center',
+      align: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            วันที่ผ่าน
+            <br />
+            หลักสูตรฯ
+          </Typography>
+        )
+      },
+      minWidth: 120,
       valueFormatter: (params) => renderDateValue(params),
     },
     {
       field: 'jointTrainingFlag',
       headerName: 'อบรมสัมมนาร่วมกัน',
-      minWidth: 150,
+      headerAlign: 'center',
+      align: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            อบรม
+            <br />
+            สัมมนาร่วมกัน
+          </Typography>
+        )
+      },
+      minWidth: 120,
       renderCell: (params) => renderStatusCell(params, 'jointTraining'),
     },
     {
       field: 'jointTrainingDate',
       headerName: 'วันที่ผ่านอบรม',
-      minWidth: 150,
+      headerAlign: 'center',
+      align: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            วันที่
+            <br />
+            ผ่านอบรม
+          </Typography>
+        )
+      },
+      minWidth: 120,
       valueFormatter: (params) => renderDateValue(params),
     },
     {
       field: 'lastUpdate',
-      headerName: 'วันเวลาที่อัพเดทข้อมูล',
-      minWidth: 180,
+      headerName: 'วันเวลาที่อัพเดตข้อมูล',
+      headerAlign: 'center',
+      align: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            วันเวลาที่
+            <br />
+            อัพเดตข้อมูล
+          </Typography>
+        )
+      },
+      minWidth: 160,
       valueFormatter: (params) => {
         if (params.value == null) {
           return ''
@@ -381,14 +535,26 @@ export default function Table({
     },
     {
       field: 'action',
-      headerName: 'อัพเดทข้อมูล',
-      minWidth: 100,
+      headerName: 'อัพเดตข้อมูล',
+      minWidth: 80,
       disableColumnMenu: true,
       disableReorder: true,
       disableExport: true,
       filterable: false,
       headerAlign: 'center',
       align: 'center',
+      renderHeader: () => {
+        return (
+          <Typography
+            align='center'
+            sx={{ fontWeight: 500, fontSize: 14, lineHeight: '1.1' }}
+          >
+            อัพเดต
+            <br />
+            ข้อมูล
+          </Typography>
+        )
+      },
       renderCell: (params) => {
         const name = `${params.row.title} ${params.row.firstName} ${params.row.lastName}`
         return (
