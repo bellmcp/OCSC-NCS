@@ -92,7 +92,7 @@ export default function AdminLogin() {
     dispatch(actionLogin)
   }
 
-  const { messageLogin } = useSelector((state: any) => state.login)
+  const { messageLogin } = useSelector((state: any) => state.adminlogin)
 
   return (
     <Container maxWidth='lg'>

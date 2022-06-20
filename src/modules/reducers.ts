@@ -3,6 +3,7 @@ import { connectRouter } from 'connected-react-router'
 import { loadingBarReducer } from 'react-redux-loading-bar'
 
 import login from 'modules/login/reducer'
+import adminlogin from 'modules/adminlogin/reducer'
 import user from 'modules/user/reducer'
 import ui from 'modules/ui/reducer'
 import ministry from 'modules/ministry/reducer'
@@ -15,6 +16,7 @@ export default (history: any) =>
     router: connectRouter(history),
     loadingBar: loadingBarReducer,
     login,
+    adminlogin,
     user,
     ui,
     ministry,

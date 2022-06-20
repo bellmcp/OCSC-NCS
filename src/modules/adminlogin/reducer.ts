@@ -1,8 +1,8 @@
 import {
-  LOAD_LOGIN_REQUEST,
-  LOAD_LOGIN_SUCCESS,
-  LOAD_LOGIN_FAILURE,
-  CLEAR_MESSAGE_LOGIN,
+  LOAD_ADMIN_LOGIN_REQUEST,
+  LOAD_ADMIN_LOGIN_SUCCESS,
+  LOAD_ADMIN_LOGIN_FAILURE,
+  CLEAR_MESSAGE_ADMIN_LOGIN,
 } from './actions'
 
 const initialState = {
@@ -14,9 +14,9 @@ const initialState = {
 
 export default function (state = initialState, action: any) {
   switch (action.type) {
-    case LOAD_LOGIN_REQUEST:
+    case LOAD_ADMIN_LOGIN_REQUEST:
       return { ...state, isLoading: true, users: [], messageLogin: [] }
-    case LOAD_LOGIN_SUCCESS:
+    case LOAD_ADMIN_LOGIN_SUCCESS:
       return {
         ...state,
         isLoading: false,
@@ -24,14 +24,14 @@ export default function (state = initialState, action: any) {
         status: action.payload.status,
         messageLogin: action.payload.messageLogin,
       }
-    case LOAD_LOGIN_FAILURE:
+    case LOAD_ADMIN_LOGIN_FAILURE:
       return {
         ...state,
         isLoading: false,
         status: action.payload.status,
         messageLogin: action.payload.messageLogin,
       }
-    case CLEAR_MESSAGE_LOGIN:
+    case CLEAR_MESSAGE_ADMIN_LOGIN:
       return { ...state, messageLogin: null }
     default:
       return state

@@ -48,7 +48,7 @@ function changePassword(submitValues: any) {
       dispatch(uiActions.setFlashMessage('เปลี่ยนรหัสผ่านสำเร็จ', 'success'))
       setTimeout(() => {
         window.location.reload()
-      }, 1000)
+      }, 2000)
     } catch (err) {
       dispatch({
         type: CHANGE_PASSWORD_FAILURE,

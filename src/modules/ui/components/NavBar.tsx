@@ -198,11 +198,11 @@ export default function NavBar(props) {
     if (isAdmin) {
       setTimeout(() => {
         history.push(`${PATH}/admin/login`)
-      }, 1000)
+      }, 2000)
     } else if (isUser) {
       setTimeout(() => {
         history.push(`${PATH}/login`)
-      }, 1000)
+      }, 2000)
     }
     window.location.reload()
   }
@@ -307,6 +307,7 @@ export default function NavBar(props) {
             </Hidden>
             <div className={classes.sectionMobile}>
               <IconButton
+                disabled={!isLoggedIn}
                 aria-controls={mobileMenuId}
                 onClick={handleMobileMenuOpen}
                 color='inherit'
